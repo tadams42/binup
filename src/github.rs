@@ -17,16 +17,6 @@ impl GithubClient {
         Self { token }
     }
 
-    fn build_request(&self, url: &str) -> ureq::Request {
-        let mut req = ureq::get(url)
-            .set("Accept", "application/vnd.github+json")
-            .set("User-Agent", "rutils-downloader");
-        if let Some(token) = &self.token {
-            req = req.set("Authorization", &format!("Bearer {}", token));
-        }
-        req
-    }
-
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {
         {
             let mut cache = CACHE.lock().unwrap();
@@ -37,13 +27,20 @@ impl GithubClient {
 
         log::info!("app={} msg=Fetching latest GitHub release", repo);
         let url = format!("{}/{}/{}/releases?per_page=5&page=1", GH_API_URL, owner, repo);
-        let response = self
-            .build_request(&url)
+
+        let mut req = ureq::get(&url)
+            .header("Accept", "application/vnd.github+json")
+            .header("User-Agent", "rutils-downloader");
+        if let Some(token) = &self.token {
+            req = req.header("Authorization", &format!("Bearer {}", token));
+        }
+        let response = req
             .call()
             .with_context(|| format!("Can't fetch GitHub release info for {}/{}", owner, repo))?;
 
         let releases: Vec<serde_json::Value> = response
-            .into_json()
+            .into_body()
+            .read_json()
             .with_context(|| format!("Invalid JSON from GitHub for {}/{}", owner, repo))?;
 
         let data = releases
@@ -93,12 +90,14 @@ impl GithubClient {
 
         log::info!("app={} msg=Downloading {}", repo, name);
         let resp = ureq::get(&url)
-            .set("User-Agent", "rutils-downloader")
+            .header("User-Agent", "rutils-downloader")
             .call()
             .with_context(|| format!("Couldn't download '{}' from GitHub", name))?;
 
-        let mut buf = Vec::new();
-        resp.into_reader().read_to_end(&mut buf)?;
+        let buf = resp
+            .into_body()
+            .read_to_vec()
+            .with_context(|| format!("Couldn't read downloaded asset '{}'", name))?;
         log::info!("app={} msg=Downloaded {}", repo, name);
 
         let asset = GhDownloadedAsset {
@@ -112,5 +111,3 @@ impl GithubClient {
         Ok(asset)
     }
 }
-
-use std::io::Read;

@@ -47,11 +47,10 @@ impl App for Go {
                 std::fs::create_dir_all(parent)?;
             }
             let resp = ureq::get(DOWNLOAD_URL)
-                .set("User-Agent", "rutils-downloader")
+                .header("User-Agent", "rutils-downloader")
                 .call()
                 .context("Downloading Go tarball")?;
-            let mut buf = Vec::new();
-            resp.into_reader().read_to_end(&mut buf)?;
+            let buf = resp.into_body().read_to_vec().context("Downloading Go tarball body")?;
             std::fs::write(&self.cache_path, &buf)?;
             log::info!("app=go msg=Downloaded Go v{}", DOWNLOAD_VERSION);
         } else {
@@ -98,4 +97,3 @@ impl App for Go {
     }
 }
 
-use std::io::Read;
