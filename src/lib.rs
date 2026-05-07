@@ -20,14 +20,6 @@ pub fn known_apps_identifiers() -> Vec<&'static str> {
     ids
 }
 
-pub fn known_apps_urls() -> Vec<String> {
-    let mut entries = all_app_entries();
-    entries.sort_by_key(|e| e.id);
-    entries.into_iter()
-        .map(|e| format!("- [{}]({})", e.id, e.url))
-        .collect()
-}
-
 pub fn select_apps(user_chosen: &[String], minimal_set: bool) -> Result<Vec<String>> {
     let known: Vec<&str> = known_apps_identifiers();
 

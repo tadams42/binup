@@ -4,7 +4,7 @@ Rust CLI that installs/updates CLI utilities directly from GitHub and Codeberg r
 
 ## Build & run
 
-```
+```sh
 cargo build
 cargo run -- --help
 cargo run -- --apps rg --gh-token-source load
