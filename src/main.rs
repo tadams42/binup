@@ -3,7 +3,8 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 use rutils_downloader::{
-    install_apps, known_apps_identifiers, load_github_token, select_apps, DEFAULT_PREFIX,
+    install_apps, known_apps_identifiers, load_codeberg_token, load_github_token, select_apps,
+    DEFAULT_PREFIX,
 };
 
 #[derive(Parser)]
@@ -22,9 +23,12 @@ struct Cli {
     apps: Vec<String>,
 
     /// Where to load GitHub API token from (prompt or load)
-    #[arg(short = 't', long, default_value = "prompt",
-          value_parser = ["prompt", "load"])]
-    token_source: String,
+    #[arg(long, default_value = "prompt", value_parser = ["prompt", "load"])]
+    gh_token_source: String,
+
+    /// Where to load Codeberg API token from (prompt or load)
+    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
+    cb_token_source: String,
 
     /// Install a hand-picked minimal set of apps (overrides --apps)
     #[arg(long, default_value_t = false)]
@@ -62,9 +66,10 @@ fn main() -> Result<()> {
         }
         None => {
             log::info!("Installing into: {:?}", cli.prefix);
-            let token = load_github_token(&cli.token_source)?;
+            let gh_token = load_github_token(&cli.gh_token_source)?;
+            let cb_token = load_codeberg_token(&cli.cb_token_source)?;
             let selected = select_apps(&cli.apps, cli.minimal_set)?;
-            let installed = install_apps(&cli.prefix, &selected, token)?;
+            let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token)?;
             if !installed.is_empty() {
                 println!("Installed files:");
                 for path in installed {

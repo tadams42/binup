@@ -34,6 +34,7 @@ pub mod lazy_journal;
 pub mod lazydocker;
 pub mod lazygit;
 pub mod mdbook;
+pub mod mergiraf;
 pub mod mise;
 pub mod neovide;
 pub mod rclone;
@@ -165,6 +166,7 @@ pub fn all_app_entries() -> Vec<AppEntry> {
         AppEntry { id: "lazydocker",  url: "https://github.com/jesseduffield/lazydocker" },
         AppEntry { id: "lazygit",     url: "https://github.com/jesseduffield/lazygit" },
         AppEntry { id: "mdbook",      url: "https://github.com/rust-lang/mdBook" },
+        AppEntry { id: "mergiraf",    url: "https://codeberg.org/mergiraf/mergiraf" },
         AppEntry { id: "mise",        url: "https://github.com/jdx/mise" },
         AppEntry { id: "neovide",     url: "https://github.com/neovide/neovide" },
         AppEntry { id: "rclone",      url: "https://github.com/rclone/rclone" },
@@ -182,10 +184,11 @@ pub fn all_app_entries() -> Vec<AppEntry> {
     ]
 }
 
-pub fn create_app(id: &str, token: Option<String>) -> Option<Box<dyn App>> {
+pub fn create_app(id: &str, gh_token: Option<String>, cb_token: Option<String>) -> Option<Box<dyn App>> {
+    use crate::codeberg::CodebergClient;
     use crate::github::GithubClient;
     use std::sync::Arc;
-    let client = Arc::new(GithubClient::new(token));
+    let client = Arc::new(GithubClient::new(gh_token));
     match id {
         "aqua"          => Some(Box::new(aqua::Aqua::new(client))),
         "ast-grep"      => Some(Box::new(ast_grep::AstGrep::new(client))),
@@ -216,6 +219,7 @@ pub fn create_app(id: &str, token: Option<String>) -> Option<Box<dyn App>> {
         "lazydocker"    => Some(Box::new(lazydocker::LazyDocker::new(client))),
         "lazygit"       => Some(Box::new(lazygit::Lazygit::new(client))),
         "mdbook"        => Some(Box::new(mdbook::Mdbook::new(client))),
+        "mergiraf"      => Some(Box::new(mergiraf::Mergiraf::new(Arc::new(CodebergClient::new(cb_token))))),
         "mise"          => Some(Box::new(mise::Mise::new(client))),
         "neovide"       => Some(Box::new(neovide::Neovide::new(client))),
         "rclone"        => Some(Box::new(rclone::Rclone::new(client))),

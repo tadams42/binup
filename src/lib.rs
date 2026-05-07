@@ -1,6 +1,7 @@
 pub mod apps;
 pub mod archive;
 pub mod cache;
+pub mod codeberg;
 pub mod github;
 pub mod installer;
 pub mod types;
@@ -51,11 +52,12 @@ pub fn select_apps(user_chosen: &[String], minimal_set: bool) -> Result<Vec<Stri
 pub fn install_apps(
     prefix: &Path,
     selected: &[String],
-    token: Option<String>,
+    gh_token: Option<String>,
+    cb_token: Option<String>,
 ) -> Result<Vec<PathBuf>> {
     let mut installed = Vec::new();
     for app_id in selected {
-        let app = create_app(app_id, token.clone())
+        let app = create_app(app_id, gh_token.clone(), cb_token.clone())
             .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         match app.install(prefix) {
             Ok(paths) => installed.extend(paths),
@@ -74,7 +76,6 @@ pub fn load_github_token(source: &str) -> Result<Option<String>> {
             Ok(if token.is_empty() { None } else { Some(token) })
         }
         "load" => {
-            // Try env var first, then config file
             if let Ok(t) = std::env::var("GITHUB_API_TOKEN") {
                 if !t.is_empty() {
                     return Ok(Some(t));
@@ -84,6 +85,36 @@ pub fn load_github_token(source: &str) -> Result<Option<String>> {
                 .unwrap_or_default()
                 .join(".config")
                 .join("github")
+                .join("api_token");
+            if config_path.exists() {
+                let content = std::fs::read_to_string(&config_path)?;
+                let token = content.lines().last().unwrap_or("").trim().to_string();
+                return Ok(if token.is_empty() { None } else { Some(token) });
+            }
+            Ok(None)
+        }
+        _ => Err(anyhow!("Unknown token source '{}'", source)),
+    }
+}
+
+pub fn load_codeberg_token(source: &str) -> Result<Option<String>> {
+    match source {
+        "prompt" => {
+            let token = rpassword::prompt_password(
+                "Codeberg API token (leave empty to skip): "
+            ).unwrap_or_default();
+            Ok(if token.is_empty() { None } else { Some(token) })
+        }
+        "load" => {
+            if let Ok(t) = std::env::var("CODEBERG_API_TOKEN") {
+                if !t.is_empty() {
+                    return Ok(Some(t));
+                }
+            }
+            let config_path = dirs::home_dir()
+                .unwrap_or_default()
+                .join(".config")
+                .join("codeberg")
                 .join("api_token");
             if config_path.exists() {
                 let content = std::fs::read_to_string(&config_path)?;

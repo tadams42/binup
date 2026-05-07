@@ -99,10 +99,17 @@ pub struct GhCache {
 
 impl GhCache {
     pub fn new() -> Self {
-        let cache_dir = dirs::home_dir()
+        Self::new_with_prefix("")
+    }
+
+    pub fn new_with_prefix(subdir: &str) -> Self {
+        let mut cache_dir = dirs::home_dir()
             .unwrap_or_else(|| PathBuf::from("."))
             .join(".cache")
             .join("rutils-downloader");
+        if !subdir.is_empty() {
+            cache_dir = cache_dir.join(subdir);
+        }
         Self { releases: HashMap::new(), assets: HashMap::new(), cache_dir }
     }
 
