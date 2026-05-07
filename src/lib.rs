@@ -1,0 +1,107 @@
+pub mod apps;
+pub mod archive;
+pub mod cache;
+pub mod github;
+pub mod installer;
+pub mod types;
+pub mod version;
+
+use anyhow::{anyhow, Result};
+use std::path::{Path, PathBuf};
+
+use apps::{all_app_entries, create_app};
+
+pub const DEFAULT_PREFIX: &str = "/usr/local";
+
+pub fn known_apps_identifiers() -> Vec<&'static str> {
+    let mut ids: Vec<&'static str> = all_app_entries().into_iter().map(|e| e.id).collect();
+    ids.sort_unstable();
+    ids
+}
+
+pub fn known_apps_urls() -> Vec<String> {
+    let mut entries = all_app_entries();
+    entries.sort_by_key(|e| e.id);
+    entries.into_iter()
+        .map(|e| format!("- [{}]({})", e.id, e.url))
+        .collect()
+}
+
+pub fn select_apps(user_chosen: &[String], minimal_set: bool) -> Result<Vec<String>> {
+    let known: Vec<&str> = known_apps_identifiers();
+
+    if minimal_set {
+        let mut apps = MINIMAL_SET.to_vec();
+        apps.sort_unstable();
+        return Ok(apps.iter().map(|s| s.to_string()).collect());
+    }
+
+    if user_chosen.is_empty() {
+        return Ok(known.iter().map(|s| s.to_string()).collect());
+    }
+
+    for app in user_chosen {
+        if !known.contains(&app.as_str()) {
+            return Err(anyhow!("Unknown app '{}'", app));
+        }
+    }
+    Ok(user_chosen.to_vec())
+}
+
+pub fn install_apps(
+    prefix: &Path,
+    selected: &[String],
+    token: Option<String>,
+) -> Result<Vec<PathBuf>> {
+    let mut installed = Vec::new();
+    for app_id in selected {
+        let app = create_app(app_id, token.clone())
+            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+        match app.install(prefix) {
+            Ok(paths) => installed.extend(paths),
+            Err(e) => log::error!("app={} msg=Install failed: {}", app_id, e),
+        }
+    }
+    Ok(installed)
+}
+
+pub fn load_github_token(source: &str) -> Result<Option<String>> {
+    match source {
+        "prompt" => {
+            let token = rpassword::prompt_password(
+                "GitHub API token (leave empty to skip): "
+            ).unwrap_or_default();
+            Ok(if token.is_empty() { None } else { Some(token) })
+        }
+        "load" => {
+            // Try env var first, then config file
+            if let Ok(t) = std::env::var("GITHUB_API_TOKEN") {
+                if !t.is_empty() {
+                    return Ok(Some(t));
+                }
+            }
+            let config_path = dirs::home_dir()
+                .unwrap_or_default()
+                .join(".config")
+                .join("github")
+                .join("api_token");
+            if config_path.exists() {
+                let content = std::fs::read_to_string(&config_path)?;
+                let token = content.lines().last().unwrap_or("").trim().to_string();
+                return Ok(if token.is_empty() { None } else { Some(token) });
+            }
+            Ok(None)
+        }
+        _ => Err(anyhow!("Unknown token source '{}'", source)),
+    }
+}
+
+const MINIMAL_SET: &[&str] = &[
+    "bat", "caddy", "chezmoi", "difft", "delta", "eza", "fnm", "lazygit",
+    "starship", "uv", "sd",
+    "gonzo", "lazyjournal",
+    "restish",
+    "fd", "rg", "fzf",
+    "xq", "yq", "fx", "gojq", "jq", "jid", "jqp", "dasel",
+    "dry", "d4s",
+];

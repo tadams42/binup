@@ -1,0 +1,116 @@
+use anyhow::{anyhow, Context, Result};
+use once_cell::sync::Lazy;
+use std::sync::Mutex;
+
+use crate::cache::{GhCache, GhDownloadedAsset, GhRelease};
+
+static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new()));
+
+const GH_API_URL: &str = "https://api.github.com/repos";
+
+pub struct GithubClient {
+    pub token: Option<String>,
+}
+
+impl GithubClient {
+    pub fn new(token: Option<String>) -> Self {
+        Self { token }
+    }
+
+    fn build_request(&self, url: &str) -> ureq::Request {
+        let mut req = ureq::get(url)
+            .set("Accept", "application/vnd.github+json")
+            .set("User-Agent", "rutils-downloader");
+        if let Some(token) = &self.token {
+            req = req.set("Authorization", &format!("Bearer {}", token));
+        }
+        req
+    }
+
+    pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {
+        {
+            let mut cache = CACHE.lock().unwrap();
+            if let Some(r) = cache.get_release(owner, repo) {
+                return Ok(r);
+            }
+        }
+
+        log::info!("app={} msg=Fetching latest GitHub release", repo);
+        let url = format!("{}/{}/{}/releases?per_page=5&page=1", GH_API_URL, owner, repo);
+        let response = self
+            .build_request(&url)
+            .call()
+            .with_context(|| format!("Can't fetch GitHub release info for {}/{}", owner, repo))?;
+
+        let releases: Vec<serde_json::Value> = response
+            .into_json()
+            .with_context(|| format!("Invalid JSON from GitHub for {}/{}", owner, repo))?;
+
+        let data = releases
+            .into_iter()
+            .find(|r| {
+                r["assets"].as_array().map(|a| !a.is_empty()).unwrap_or(false)
+                    && r["tag_name"].as_str() != Some("nightly")
+            })
+            .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
+
+        let release = GhRelease::new(owner, repo, data)?;
+        CACHE.lock().unwrap().store_release(release.clone())?;
+        Ok(release)
+    }
+
+    pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<GhDownloadedAsset> {
+        let release = self.latest_release(owner, repo)?;
+
+        let gh_id = if name == "tarball" {
+            release.gh_id().unwrap_or(0)
+        } else {
+            release
+                .asset_id(name)
+                .ok_or_else(|| anyhow!("No such asset '{}' in {}/{}", name, owner, repo))?
+        };
+
+        {
+            let mut cache = CACHE.lock().unwrap();
+            if let Some(a) = cache.get_asset(owner, repo, name, gh_id) {
+                return Ok(a);
+            }
+        }
+
+        let url = if name == "tarball" {
+            release
+                .tarball_url()
+                .ok_or_else(|| anyhow!("No tarball URL for {}/{}", owner, repo))?
+        } else {
+            release
+                .asset_download_url(name)
+                .ok_or_else(|| anyhow!("No download URL for asset '{}' in {}/{}", name, owner, repo))?
+        };
+
+        if !url.starts_with("http:") && !url.starts_with("https:") {
+            return Err(anyhow!("Unsafe URL scheme: {}", url));
+        }
+
+        log::info!("app={} msg=Downloading {}", repo, name);
+        let resp = ureq::get(&url)
+            .set("User-Agent", "rutils-downloader")
+            .call()
+            .with_context(|| format!("Couldn't download '{}' from GitHub", name))?;
+
+        let mut buf = Vec::new();
+        resp.into_reader().read_to_end(&mut buf)?;
+        log::info!("app={} msg=Downloaded {}", repo, name);
+
+        let asset = GhDownloadedAsset {
+            gh_id,
+            owner: owner.to_string(),
+            repo: repo.to_string(),
+            name: name.to_string(),
+            data: buf,
+        };
+        CACHE.lock().unwrap().store_asset(asset.clone())?;
+        Ok(asset)
+    }
+}
+
+use std::io::Read;
