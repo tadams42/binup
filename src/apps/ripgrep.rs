@@ -1,12 +1,11 @@
 use anyhow::{anyhow, Result};
-use std::path::Path;
 use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::github::GithubClient;
-use crate::installer::{gen_completions_with_flags, with_temp_exe, run_cmd};
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage, Shell};
+use crate::installer::{with_temp_exe, run_cmd};
+use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Ripgrep { client: Arc<GithubClient> }

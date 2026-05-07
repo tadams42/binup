@@ -1,7 +1,5 @@
 use anyhow::{anyhow, Context, Result};
 use std::path::{Path, PathBuf};
-use std::sync::Arc;
-
 use crate::apps::App;
 use crate::types::DownloadedAssets;
 use crate::version::AppVersion;

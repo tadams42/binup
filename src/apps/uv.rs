@@ -49,13 +49,13 @@ impl App for Uv {
         let uv_data = extractor.extract(&uv_entry)?;
         let uvx_data = extractor.extract(&uvx_entry)?;
 
-        let mut completions = with_temp_exe("uv", &uv_data, |exe_path| {
+        let completions = with_temp_exe("uv", &uv_data, |exe_path| {
             // Also write uvx next to uv for uvx completions
             let uvx_path = exe_path.parent().unwrap().join("uvx");
             std::fs::write(&uvx_path, &uvx_data)?;
             std::fs::set_permissions(&uvx_path, std::fs::Permissions::from_mode(0o755))?;
 
-            let mut comps = vec![
+            let comps = vec![
                 Completion::zsh("uv", run_cmd(exe_path, &["generate-shell-completion", "zsh"])?),
                 Completion::bash("uv", run_cmd(exe_path, &["generate-shell-completion", "bash"])?),
                 Completion::fish("uv", run_cmd(exe_path, &["generate-shell-completion", "fish"])?),
