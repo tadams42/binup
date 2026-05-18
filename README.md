@@ -1,17 +1,27 @@
 # binup
 
-Downloads and installs bunch of cmdline utilities into `/usr/local` directly from
-`GitHub` and `Codeberg` releases.
+Downloads and installs bunch of cmdline utilities directly from `GitHub` and `Codeberg`
+releases into `/usr/local`. Installs app itself, `man` pages and completion for `ZSH`,
+`Bash` and `Fish` into standard locations.
 
-For some (most) downloaded apps, it additionally installs to `/usr/local/`:
+**TL;DR**
 
-- `man` pages
-- `ZSH`, `Bash` and `Fish` completions
+```sh
+curl -fsSL https://github.com/tadams42/binup/releases/latest/download/binup-x86_64-linux.tar.gz | tar xz
 
-## How it works
+sudo ./binup --gh-token-source load --minimal-set
 
-For supported apps, downloads latest release (binary) from `GitHub` or `Codeberg` and
-installs it into `/usr/local`.
+rm ./binup
+```
+
+## Why?
+
+Whenever I need to `ssh` to some new VM, I usually loose access to my favorite
+collection of CLI tools. Sometimes `sudo apt install ...` or similar can help. Often
+times it can't.
+
+`binup` always works ... though downloaded binaries may not 😎. The risk is acceptable
+to me `99.999%` of times. `YMMV`.
 
 Installing into `/usr/local` doesn't interfere with the rest of the system. Ie. you can
 have `ripgrep` installed from both, official distro package and from `binup`: updating
@@ -19,68 +29,58 @@ any of them will not overwrite the other. Which one gets used when you call `rip
 from your shell, depends on your `$PATH`. In most modern distros, stuff from
 `/usr/local` has priority.
 
-## Why?
+## Non goals
 
-Whenever I need to `ssh` to some new VM, I usually loose access to my favorite
-collection of CLI tools. Sometimes `sudo apt install ...` or similar can help. Often
-times: it can't.
-
-`binup` always works ... though downloaded binaries may not 😎
-
-The risk is acceptable `99.999%` of times.
+- `binup` is **NOT** a fully blown package manager
+- there is no way to select the version of installed binary - `binup` **ALWAYS**
+  installs latest version of each supported app:
+  - which may not work on your current system (usually if your system is too old)
+  - or that app's released binary is broken
+  - or the binary works but the latest version that `binup` had just installed, is no
+    longer compatible with whatever you have on your system that depends on it; and
+    `binup` had just this moment installed it to location that makes sure this broken
+    version is called by everything 😎
+  - or ...
+- there is no way to uninstall installed files (except by deleting manually from
+  `/usr/local`)
+- `binup` works on and installs utilities for **Linux only**; you may be able to make it
+  work on some other systems, but it was never intended to be used like that [^1]
+- `binup` downloads only `x86_64` binaries
 
 ## How to use it?
 
 ```sh
 # install everything into /usr/local
-binup
+sudo binup
 
-# install a subset
-binup --apps rg --apps bat --apps fzf
-
-# install the hand-picked minimal set
-binup --minimal-set
-
-# install into a different prefix (no sudo needed)
+# ... or install everything into ~/.local
 binup --prefix ~/.local
 
-# list all supported app identifiers
-binup list-apps-ids
+# install a subset of apps
+binup --prefix ~/.local --apps rg,bat,fzf
+
+# install the hand-picked minimal set
+binup --prefix ~/.local --minimal-set
 ```
 
 `GitHub` applies rate limiting to unauthenticated API requests. Providing a token avoids
 hitting those limits.
 
 ```sh
-# prompt for GitHub token interactively (default)
+# prompt for GitHub token interactively
 binup --gh-token-source prompt
 
 # load GitHub token from GITHUB_API_TOKEN env var or ~/.config/github/api_token
 binup --gh-token-source load
 
-# load Codeberg token from CODEBERG_API_TOKEN env var or
-# ~/.config/codeberg/api_token (default)
+# load Codeberg token from CODEBERG_API_TOKEN env var or ~/.config/codeberg/api_token
 binup --cb-token-source load
 
 # prompt for Codeberg token interactively
 binup --cb-token-source prompt
 ```
 
-One side-effect is that it always uses `~/.cache/binup` for stuff downloaded from
-`GitHub` and `Codeberg`.
-
-## Non goals
-
-- `binup` is not a fully blown package manager
-- `binup` always installs latest available versions, which may not work on your current
-  system, may be broken release, or whatever else: there is not way to select or pin
-  version of installed binary
-- there is no way to uninstall installed files (besides deleting all relevant
-  directories in `/usr/local` and trying again)
-- it supports Linux only; you may be able to make it work on some other systems, but it
-  was never intended to be used for that
-- it supports only `x86_64` architecture and will not even try to download other
-  binaries
+`binup` always uses `~/.cache/binup` for stuff downloaded from `GitHub` and `Codeberg`.
 
 ## Supported apps
 
@@ -129,8 +129,8 @@ One side-effect is that it always uses `~/.cache/binup` for stuff downloaded fro
 - [yq](https://github.com/mikefarah/yq)
 - [zoxide](https://github.com/ajeetdsouza/zoxide)
 
-[^1]: This had once been written in Python.
-      Workflow that required deployment of Python to be able to deploy `binup` to be
-      able to deploy various CLI utilities was not one of my brightest ideas. Luckily,
-      Claude was able to rewrite whole thing in Rust so I was able to abandon version in
-      Python. 😎
+[^1]: Previously, `binup` had been written in Python.
+      Workflow that required me to deploy Python to be able to deploy `binup` to be able
+      to deploy various CLI utilities was not one of my brightest ideas. Luckily, Claude
+      was able to rewrite the whole thing in Rust so I was able to abandon that silly
+      Python project. 😎
