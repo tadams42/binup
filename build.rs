@@ -36,7 +36,7 @@ fn update_readme(manifest_dir: &Path) {
         .expect("'Supported apps' marker not found in README.md");
     let idx_last = lines
         .iter()
-        .position(|l| *l == "[^1]: This had once been written in Python.")
+        .position(|l| l.starts_with("[^1]: ") )
         .expect("'[^1]:' marker not found in README.md");
 
     let mut new_lines: Vec<String> =
