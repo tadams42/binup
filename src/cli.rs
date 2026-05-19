@@ -19,7 +19,7 @@ pub struct Cli {
     pub apps: Vec<String>,
 
     /// Where to load GitHub API token from (prompt or load)
-    #[arg(long, default_value = "prompt", value_parser = ["prompt", "load"])]
+    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
     pub gh_token_source: String,
 
     /// Where to load Codeberg API token from (prompt or load)
