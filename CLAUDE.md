@@ -1,4 +1,4 @@
-# binup
+# relget
 
 Rust CLI that installs/updates CLI utilities directly from GitHub and Codeberg releases.
 
@@ -12,7 +12,7 @@ cargo run -- --apps rg,bat --gh-token-source load   # comma-separated
 cargo run -- list-apps-ids
 ```
 
-Use `--prefix /tmp/try-binup/` to avoid needing `sudo` during local testing.
+Use `--prefix /tmp/try-relget/` to avoid needing `sudo` during local testing.
 
 ## Architecture
 
@@ -25,7 +25,7 @@ src/
     *.rs           # one file per app
   github.rs        # GithubClient with singleton Lazy<Mutex<GhCache>>
   codeberg.rs      # CodebergClient with singleton Lazy<Mutex<GhCache>>
-  cache.rs         # GhCache: memory HashMap + disk under ~/.cache/binup/
+  cache.rs         # GhCache: memory HashMap + disk under ~/.cache/relget/
   archive.rs       # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
   installer.rs     # install_assets(), with_temp_exe(), run_cmd(), gen_completions_*()
   types.rs         # AppBinary, ManPage, Shell, Completion, DownloadedAssets
@@ -127,8 +127,8 @@ with_temp_exe("myapp", &data, |path| { ... })
 ## Cache
 
 `GhCache` is reused for both GitHub and Codeberg:
-- GitHub: `~/.cache/binup/{owner}/{repo}/release.json` and `asset.{id}`
-- Codeberg: `~/.cache/binup/codeberg/{owner}/{repo}/release.json` and `asset.{id}`
+- GitHub: `~/.cache/relget/{owner}/{repo}/release.json` and `asset.{id}`
+- Codeberg: `~/.cache/relget/codeberg/{owner}/{repo}/release.json` and `asset.{id}`
 - Release cache TTL: 1 hour
 - Asset cache: permanent (keyed by asset ID, which changes when a new release is published)
 

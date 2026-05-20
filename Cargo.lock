@@ -112,32 +112,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
-name = "binup"
-version = "0.1.4"
-dependencies = [
- "anyhow",
- "ar",
- "bzip2",
- "chrono",
- "clap",
- "clap_complete",
- "dirs",
- "env_logger",
- "flate2",
- "log",
- "once_cell",
- "regex",
- "rpassword",
- "serde",
- "serde_json",
- "tar",
- "tempfile",
- "ureq",
- "xz2",
- "zip",
-]
-
-[[package]]
 name = "bitflags"
 version = "2.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1181,6 +1155,32 @@ name = "regex-syntax"
 version = "0.8.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc897dd8d9e8bd1ed8cdad82b5966c3e0ecae09fb1907d58efaa013543185d0a"
+
+[[package]]
+name = "relget"
+version = "0.1.4"
+dependencies = [
+ "anyhow",
+ "ar",
+ "bzip2",
+ "chrono",
+ "clap",
+ "clap_complete",
+ "dirs",
+ "env_logger",
+ "flate2",
+ "log",
+ "once_cell",
+ "regex",
+ "rpassword",
+ "serde",
+ "serde_json",
+ "tar",
+ "tempfile",
+ "ureq",
+ "xz2",
+ "zip",
+]
 
 [[package]]
 name = "ring"

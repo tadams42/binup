@@ -106,7 +106,7 @@ impl GhCache {
         let mut cache_dir = dirs::home_dir()
             .unwrap_or_else(|| PathBuf::from("."))
             .join(".cache")
-            .join("binup");
+            .join("relget");
         if !subdir.is_empty() {
             cache_dir = cache_dir.join(subdir);
         }

@@ -1,10 +1,10 @@
 [package]
-name = "binup"
+name = "relget"
 version = "0.1.4"
 edition = "2021"
 
 [[bin]]
-name = "binup"
+name = "relget"
 path = "src/main.rs"
 
 [dependencies]
