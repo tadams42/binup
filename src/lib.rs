@@ -137,7 +137,7 @@ pub fn load_codeberg_token(source: &str) -> Result<Option<String>> {
     }
 }
 
-const MINIMAL_SET: &[&str] = &[
+pub const MINIMAL_SET: &[&str] = &[
     "bat",
     "chezmoi",
     "delta",

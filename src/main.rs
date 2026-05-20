@@ -1,5 +1,5 @@
 use anyhow::Result;
-use clap::{CommandFactory, Parser};
+use clap::{CommandFactory, FromArgMatches};
 use clap_complete::generate;
 
 mod cli;
@@ -7,7 +7,7 @@ use cli::{Cli, Commands};
 
 use relget::{
     install_apps, known_apps_identifiers, load_codeberg_token, load_github_token, select_apps,
-    uninstall_apps,
+    uninstall_apps, MINIMAL_SET,
 };
 
 fn main() -> Result<()> {
@@ -18,7 +18,12 @@ fn main() -> Result<()> {
         })
         .init();
 
-    let cli = Cli::parse();
+    let minimal_set_help = format!(
+        "Install a hand-picked minimal set of apps (overrides --apps): {}",
+        MINIMAL_SET.join(", ")
+    );
+    let cmd = Cli::command().mut_arg("minimal_set", |a| a.help(minimal_set_help));
+    let cli = Cli::from_arg_matches(&cmd.get_matches())?;
 
     match cli.command {
         Some(Commands::ListAppsIds) => {
