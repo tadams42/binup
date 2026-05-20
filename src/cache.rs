@@ -160,6 +160,24 @@ impl GhCache {
         None
     }
 
+    /// Like `get_release` but ignores expiry — for offline mode.
+    pub fn get_release_any_age(&mut self, owner: &str, repo: &str) -> Option<GhRelease> {
+        let key = Self::release_key(owner, repo);
+        if let Some(r) = self.releases.get(&key) {
+            return Some(r.clone());
+        }
+        let path = self.repo_cache_dir(owner, repo).join("release.json");
+        if path.exists() {
+            if let Ok(data) = std::fs::read_to_string(&path) {
+                if let Ok(json) = serde_json::from_str::<GhRelease>(&data) {
+                    self.releases.insert(key, json.clone());
+                    return Some(json);
+                }
+            }
+        }
+        None
+    }
+
     pub fn store_release(&mut self, release: GhRelease) -> Result<()> {
         let dir = self.repo_cache_dir(&release.owner, &release.repo);
         std::fs::create_dir_all(&dir)?;

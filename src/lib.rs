@@ -48,14 +48,19 @@ pub fn install_apps(
     selected: &[String],
     gh_token: Option<String>,
     cb_token: Option<String>,
+    offline: bool,
 ) -> Result<Vec<PathBuf>> {
     let mut installed = Vec::new();
     for app_id in selected {
-        let app = create_app(app_id, gh_token.clone(), cb_token.clone())
+        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), offline)
             .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         match app.install(prefix) {
             Ok(paths) => installed.extend(paths),
-            Err(e) => log::error!("app={} msg=Install failed: {:#}", app_id, e),
+            Err(e) => if offline {
+                log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
+            } else {
+                log::error!("app={} msg=Install failed: {:#}", app_id, e);
+            },
         }
     }
     Ok(installed)
@@ -65,7 +70,7 @@ pub fn uninstall_apps(prefix: &Path, selected: &[String]) -> Result<Vec<PathBuf>
     let validated = select_apps(selected, false)?;
     let mut removed = Vec::new();
     for app_id in &validated {
-        let app = create_app(app_id, None, None)
+        let app = create_app(app_id, None, None, false)
             .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         removed.extend(uninstall_app(prefix, app.exe_name()));
     }

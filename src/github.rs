@@ -10,16 +10,22 @@ const GH_API_URL: &str = "https://api.github.com/repos";
 
 pub struct GithubClient {
     pub token: Option<String>,
+    pub offline: bool,
 }
 
 impl GithubClient {
-    pub fn new(token: Option<String>) -> Self {
-        Self { token }
+    pub fn new(token: Option<String>, offline: bool) -> Self {
+        Self { token, offline }
     }
 
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {
         {
             let mut cache = CACHE.lock().unwrap();
+            if self.offline {
+                return cache
+                    .get_release_any_age(owner, repo)
+                    .ok_or_else(|| anyhow!("offline mode: no cached release for {}/{}", owner, repo));
+            }
             if let Some(r) = cache.get_release(owner, repo) {
                 return Ok(r);
             }
@@ -72,6 +78,13 @@ impl GithubClient {
             if let Some(a) = cache.get_asset(owner, repo, name, gh_id) {
                 return Ok(a);
             }
+        }
+
+        if self.offline {
+            return Err(anyhow!(
+                "offline mode: no cached asset '{}' for {}/{}",
+                name, owner, repo
+            ));
         }
 
         let url = if name == "tarball" {

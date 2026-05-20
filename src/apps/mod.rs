@@ -184,11 +184,11 @@ pub fn all_app_entries() -> Vec<AppEntry> {
     ]
 }
 
-pub fn create_app(id: &str, gh_token: Option<String>, cb_token: Option<String>) -> Option<Box<dyn App>> {
+pub fn create_app(id: &str, gh_token: Option<String>, cb_token: Option<String>, offline: bool) -> Option<Box<dyn App>> {
     use crate::codeberg::CodebergClient;
     use crate::github::GithubClient;
     use std::sync::Arc;
-    let client = Arc::new(GithubClient::new(gh_token));
+    let client = Arc::new(GithubClient::new(gh_token, offline));
     match id {
         "aqua"          => Some(Box::new(aqua::Aqua::new(client))),
         "ast-grep"      => Some(Box::new(ast_grep::AstGrep::new(client))),
@@ -219,7 +219,7 @@ pub fn create_app(id: &str, gh_token: Option<String>, cb_token: Option<String>) 
         "lazydocker"    => Some(Box::new(lazydocker::LazyDocker::new(client))),
         "lazygit"       => Some(Box::new(lazygit::Lazygit::new(client))),
         "mdbook"        => Some(Box::new(mdbook::Mdbook::new(client))),
-        "mergiraf"      => Some(Box::new(mergiraf::Mergiraf::new(Arc::new(CodebergClient::new(cb_token))))),
+        "mergiraf"      => Some(Box::new(mergiraf::Mergiraf::new(Arc::new(CodebergClient::new(cb_token, offline))))),
         "mise"          => Some(Box::new(mise::Mise::new(client))),
         "neovide"       => Some(Box::new(neovide::Neovide::new(client))),
         "rclone"        => Some(Box::new(rclone::Rclone::new(client))),

@@ -10,11 +10,13 @@ const CB_API_URL: &str = "https://codeberg.org/api/v1/repos";
 
 pub struct CodebergClient {
     pub token: Option<String>,
+    pub offline: bool,
 }
 
 impl CodebergClient {
-    pub fn new(token: Option<String>) -> Self {
-        Self { token: token.or_else(|| Self::load_token()) }
+    pub fn new(token: Option<String>, offline: bool) -> Self {
+        let token = if offline { token } else { token.or_else(|| Self::load_token()) };
+        Self { token, offline }
     }
 
     fn load_token() -> Option<String> {
@@ -42,6 +44,11 @@ impl CodebergClient {
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {
         {
             let mut cache = CACHE.lock().unwrap();
+            if self.offline {
+                return cache
+                    .get_release_any_age(owner, repo)
+                    .ok_or_else(|| anyhow!("offline mode: no cached release for {}/{}", owner, repo));
+            }
             if let Some(r) = cache.get_release(owner, repo) {
                 return Ok(r);
             }
@@ -89,6 +96,13 @@ impl CodebergClient {
             if let Some(a) = cache.get_asset(owner, repo, name, asset_id) {
                 return Ok(a);
             }
+        }
+
+        if self.offline {
+            return Err(anyhow!(
+                "offline mode: no cached asset '{}' for {}/{}",
+                name, owner, repo
+            ));
         }
 
         let url = release

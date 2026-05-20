@@ -53,9 +53,12 @@ fn main() -> Result<()> {
                 }
             }
             log::info!("Reinstalling into: {:?}", cli.prefix);
-            let gh_token = load_github_token(&cli.gh_token_source)?;
-            let cb_token = load_codeberg_token(&cli.cb_token_source)?;
-            let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token)?;
+            let (gh_token, cb_token) = if cli.offline {
+                (None, None)
+            } else {
+                (load_github_token(&cli.gh_token_source)?, load_codeberg_token(&cli.cb_token_source)?)
+            };
+            let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, cli.offline)?;
             if !installed.is_empty() {
                 println!("Installed files:");
                 for path in installed {
@@ -65,10 +68,13 @@ fn main() -> Result<()> {
         }
         None => {
             log::info!("Installing into: {:?}", cli.prefix);
-            let gh_token = load_github_token(&cli.gh_token_source)?;
-            let cb_token = load_codeberg_token(&cli.cb_token_source)?;
+            let (gh_token, cb_token) = if cli.offline {
+                (None, None)
+            } else {
+                (load_github_token(&cli.gh_token_source)?, load_codeberg_token(&cli.cb_token_source)?)
+            };
             let selected = select_apps(&cli.apps, cli.minimal_set)?;
-            let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token)?;
+            let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, cli.offline)?;
             if !installed.is_empty() {
                 println!("Installed files:");
                 for path in installed {

@@ -29,6 +29,10 @@ pub struct Cli {
     /// Install a hand-picked minimal set of apps (overrides --apps)
     #[arg(long, default_value_t = false, global = true)]
     pub minimal_set: bool,
+
+    /// Use only cached data; never make network requests
+    #[arg(long, default_value_t = false, global = true)]
+    pub offline: bool,
 }
 
 #[derive(Subcommand)]
