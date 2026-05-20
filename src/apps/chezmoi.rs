@@ -31,7 +31,8 @@ impl App for Chezmoi {
         let name = release
             .asset_names()
             .into_iter()
-            .find(|a| a.starts_with("chezmoi_") && a.ends_with("_linux-glibc_amd64.tar.gz"))
+            // .find(|a| a.starts_with("chezmoi_") && a.ends_with("_linux-glibc_amd64.tar.gz"))
+            .find(|a| a.starts_with("chezmoi_") && a.ends_with("_linux-musl_amd64.tar.gz"))
             .ok_or_else(|| anyhow!("Can't find chezmoi asset"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
