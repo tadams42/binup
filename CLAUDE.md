@@ -117,10 +117,10 @@ with_temp_exe("myapp", &data, |path| { ... })
 
 ## Token handling
 
-- `--gh-token-source prompt` (default): prompts on stdin
-- `--gh-token-source load`: reads `GITHUB_API_TOKEN` env, then `~/.config/github/api_token`
-- `--cb-token-source load` (default): reads `CODEBERG_API_TOKEN` env, then `~/.config/codeberg/api_token`
+- `--gh-token-source prompt`: prompts on stdin
+- `--gh-token-source load` (default): reads `GITHUB_API_TOKEN` env, then `~/.config/github/api_token`
 - `--cb-token-source prompt`: prompts on stdin
+- `--cb-token-source load` (default): reads `CODEBERG_API_TOKEN` env, then `~/.config/codeberg/api_token`
 
 `CodebergClient::new(token)` uses the provided token if `Some`, otherwise falls back to auto-loading from env/file.
 
