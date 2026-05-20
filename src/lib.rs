@@ -134,9 +134,11 @@ pub fn load_codeberg_token(source: &str) -> Result<Option<String>> {
     }
 }
 
+#[rustfmt::skip]
 pub const MINIMAL_SET: &[&str] = &[
     "bat",
     "chezmoi",
+    "d4s",
     "delta",
     "difft",
     "eza",
@@ -146,9 +148,7 @@ pub const MINIMAL_SET: &[&str] = &[
     "gitleaks",
     "gojq",
     "jq",
-    "lazydocker",
     "lazygit",
-    "lazyjournal",
     "rclone",
     "restish",
     "rg",
