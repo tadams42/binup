@@ -96,6 +96,8 @@ impl GithubClient {
 
         let buf = resp
             .into_body()
+            .into_with_config()
+            .limit(500 * 1024 * 1024)
             .read_to_vec()
             .with_context(|| format!("Couldn't read downloaded asset '{}'", name))?;
         log::info!("app={} msg=Downloaded {}", repo, name);

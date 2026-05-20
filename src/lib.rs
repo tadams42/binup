@@ -53,7 +53,7 @@ pub fn install_apps(
             .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         match app.install(prefix) {
             Ok(paths) => installed.extend(paths),
-            Err(e) => log::error!("app={} msg=Install failed: {}", app_id, e),
+            Err(e) => log::error!("app={} msg=Install failed: {:#}", app_id, e),
         }
     }
     Ok(installed)

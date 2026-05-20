@@ -108,6 +108,8 @@ impl CodebergClient {
             .call()
             .with_context(|| format!("Couldn't download '{}' from Codeberg", name))?
             .into_body()
+            .into_with_config()
+            .limit(500 * 1024 * 1024)
             .read_to_vec()
             .with_context(|| format!("Couldn't read downloaded asset '{}'", name))?;
         log::info!("app={} msg=Downloaded {}", repo, name);
