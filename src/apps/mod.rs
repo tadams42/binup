@@ -5,53 +5,17 @@ use crate::installer::install_assets;
 use crate::types::DownloadedAssets;
 use crate::version::AppVersion;
 
-pub mod aqua;
-pub mod ast_grep;
-pub mod atuin;
-pub mod bat;
-pub mod caddy;
-pub mod carapace;
 pub mod chezmoi;
-pub mod d4s;
-pub mod dasel;
-pub mod delta;
-pub mod difftastic;
-pub mod dock_mate;
-pub mod dry;
-pub mod dust;
-pub mod eza;
-pub mod fd_find;
-pub mod fnm;
-pub mod fx;
-pub mod fzf;
-pub mod gitleaks;
-#[allow(dead_code)]
-pub mod go;
-pub mod gojq;
-pub mod gonzo;
-pub mod jid;
-pub mod jq;
-pub mod jqp;
-pub mod lazy_journal;
-pub mod lazydocker;
-pub mod lazygit;
-pub mod mdbook;
-pub mod mergiraf;
-pub mod mise;
-pub mod neovide;
+pub mod containers;
+pub mod data;
+pub mod dev_envs;
+pub mod dev_tools;
+pub mod files;
+pub mod git;
+pub mod http;
+pub mod logs;
 pub mod rclone;
-pub mod restish;
-pub mod ripgrep;
-pub mod rust_analyzer;
-pub mod sd_edit;
-pub mod skim;
-pub mod starship;
-pub mod stylua;
-pub mod uv;
-pub mod xh;
-pub mod xq;
-pub mod yq;
-pub mod zoxide;
+pub mod shell;
 
 // ── App trait ────────────────────────────────────────────────────────────────
 
@@ -324,55 +288,55 @@ pub fn create_app(
     use std::sync::Arc;
     let client = Arc::new(GithubClient::new(gh_token, offline));
     match id {
-        "aqua" => Some(Box::new(aqua::Aqua::new(client))),
-        "ast-grep" => Some(Box::new(ast_grep::AstGrep::new(client))),
-        "atuin" => Some(Box::new(atuin::Atuin::new(client))),
-        "bat" => Some(Box::new(bat::Bat::new(client))),
-        "caddy" => Some(Box::new(caddy::Caddy::new(client))),
-        "carapace" => Some(Box::new(carapace::Carapace::new(client))),
+        "aqua" => Some(Box::new(dev_envs::aqua::Aqua::new(client))),
+        "ast-grep" => Some(Box::new(dev_tools::ast_grep::AstGrep::new(client))),
+        "atuin" => Some(Box::new(shell::atuin::Atuin::new(client))),
+        "bat" => Some(Box::new(files::bat::Bat::new(client))),
+        "caddy" => Some(Box::new(http::caddy::Caddy::new(client))),
+        "carapace" => Some(Box::new(shell::carapace::Carapace::new(client))),
         "chezmoi" => Some(Box::new(chezmoi::Chezmoi::new(client))),
-        "d4s" => Some(Box::new(d4s::D4S::new(client))),
-        "dasel" => Some(Box::new(dasel::Dasel::new(client))),
-        "delta" => Some(Box::new(delta::Delta::new(client))),
-        "difft" => Some(Box::new(difftastic::Difftastic::new(client))),
-        "dockmate" => Some(Box::new(dock_mate::DockMate::new(client))),
-        "dry" => Some(Box::new(dry::Dry::new(client))),
-        "dust" => Some(Box::new(dust::Dust::new(client))),
-        "eza" => Some(Box::new(eza::Eza::new(client))),
-        "fd" => Some(Box::new(fd_find::FdFind::new(client))),
-        "fnm" => Some(Box::new(fnm::Fnm::new(client))),
-        "fx" => Some(Box::new(fx::Fx::new(client))),
-        "fzf" => Some(Box::new(fzf::Fzf::new(client))),
-        "gitleaks" => Some(Box::new(gitleaks::Gitleaks::new(client))),
-        "gojq" => Some(Box::new(gojq::GoJq::new(client))),
-        "gonzo" => Some(Box::new(gonzo::Gonzo::new(client))),
-        "jid" => Some(Box::new(jid::Jid::new(client))),
-        "jq" => Some(Box::new(jq::Jq::new(client))),
-        "jqp" => Some(Box::new(jqp::Jqp::new(client))),
-        "lazyjournal" => Some(Box::new(lazy_journal::LazyJournal::new(client))),
-        "lazydocker" => Some(Box::new(lazydocker::LazyDocker::new(client))),
-        "lazygit" => Some(Box::new(lazygit::Lazygit::new(client))),
-        "mdbook" => Some(Box::new(mdbook::Mdbook::new(client))),
+        "d4s" => Some(Box::new(containers::d4s::D4S::new(client))),
+        "dasel" => Some(Box::new(data::dasel::Dasel::new(client))),
+        "delta" => Some(Box::new(git::delta::Delta::new(client))),
+        "difft" => Some(Box::new(git::difftastic::Difftastic::new(client))),
+        "dockmate" => Some(Box::new(containers::dock_mate::DockMate::new(client))),
+        "dry" => Some(Box::new(containers::dry::Dry::new(client))),
+        "dust" => Some(Box::new(files::dust::Dust::new(client))),
+        "eza" => Some(Box::new(files::eza::Eza::new(client))),
+        "fd" => Some(Box::new(files::fd_find::FdFind::new(client))),
+        "fnm" => Some(Box::new(dev_envs::fnm::Fnm::new(client))),
+        "fx" => Some(Box::new(data::fx::Fx::new(client))),
+        "fzf" => Some(Box::new(shell::fzf::Fzf::new(client))),
+        "gitleaks" => Some(Box::new(git::gitleaks::Gitleaks::new(client))),
+        "gojq" => Some(Box::new(data::gojq::GoJq::new(client))),
+        "gonzo" => Some(Box::new(logs::gonzo::Gonzo::new(client))),
+        "jid" => Some(Box::new(data::jid::Jid::new(client))),
+        "jq" => Some(Box::new(data::jq::Jq::new(client))),
+        "jqp" => Some(Box::new(data::jqp::Jqp::new(client))),
+        "lazyjournal" => Some(Box::new(logs::lazy_journal::LazyJournal::new(client))),
+        "lazydocker" => Some(Box::new(containers::lazydocker::LazyDocker::new(client))),
+        "lazygit" => Some(Box::new(git::lazygit::Lazygit::new(client))),
+        "mdbook" => Some(Box::new(dev_tools::mdbook::Mdbook::new(client))),
         "mergiraf" => {
-            Some(Box::new(mergiraf::Mergiraf::new(Arc::new(CodebergClient::new(
+            Some(Box::new(git::mergiraf::Mergiraf::new(Arc::new(CodebergClient::new(
                 cb_token, offline,
             )))))
         }
-        "mise" => Some(Box::new(mise::Mise::new(client))),
-        "neovide" => Some(Box::new(neovide::Neovide::new(client))),
+        "mise" => Some(Box::new(dev_envs::mise::Mise::new(client))),
+        "neovide" => Some(Box::new(dev_tools::neovide::Neovide::new(client))),
         "rclone" => Some(Box::new(rclone::Rclone::new(client))),
-        "restish" => Some(Box::new(restish::Restish::new(client))),
-        "rg" => Some(Box::new(ripgrep::Ripgrep::new(client))),
-        "rust-analyzer" => Some(Box::new(rust_analyzer::RustAnalyzer::new(client))),
-        "sd" => Some(Box::new(sd_edit::SdEdit::new(client))),
-        "sk" => Some(Box::new(skim::Skim::new(client))),
-        "starship" => Some(Box::new(starship::Starship::new(client))),
-        "stylua" => Some(Box::new(stylua::Stylua::new(client))),
-        "uv" => Some(Box::new(uv::Uv::new(client))),
-        "xh" => Some(Box::new(xh::Xh::new(client))),
-        "xq" => Some(Box::new(xq::Xq::new(client))),
-        "yq" => Some(Box::new(yq::Yq::new(client))),
-        "zoxide" => Some(Box::new(zoxide::Zoxide::new(client))),
+        "restish" => Some(Box::new(http::restish::Restish::new(client))),
+        "rg" => Some(Box::new(files::ripgrep::Ripgrep::new(client))),
+        "rust-analyzer" => Some(Box::new(dev_tools::rust_analyzer::RustAnalyzer::new(client))),
+        "sd" => Some(Box::new(files::sd_edit::SdEdit::new(client))),
+        "sk" => Some(Box::new(shell::skim::Skim::new(client))),
+        "starship" => Some(Box::new(shell::starship::Starship::new(client))),
+        "stylua" => Some(Box::new(dev_tools::stylua::Stylua::new(client))),
+        "uv" => Some(Box::new(dev_envs::uv::Uv::new(client))),
+        "xh" => Some(Box::new(http::xh::Xh::new(client))),
+        "xq" => Some(Box::new(data::xq::Xq::new(client))),
+        "yq" => Some(Box::new(data::yq::Yq::new(client))),
+        "zoxide" => Some(Box::new(shell::zoxide::Zoxide::new(client))),
         _ => None,
     }
 }
