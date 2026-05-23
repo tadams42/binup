@@ -119,6 +119,7 @@ for the full list of caveats.
 - [difft](https://github.com/Wilfred/difftastic)
 - [dockmate](https://github.com/shubh-io/DockMate)
 - [dry](https://github.com/moncho/dry)
+- [dust](https://github.com/bootandy/dust)
 - [eza](https://github.com/eza-community/eza)
 - [fd](https://github.com/sharkdp/fd)
 - [fnm](https://github.com/Schniz/fnm)

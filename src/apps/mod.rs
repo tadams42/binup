@@ -18,6 +18,7 @@ pub mod delta;
 pub mod difftastic;
 pub mod dock_mate;
 pub mod dry;
+pub mod dust;
 pub mod eza;
 pub mod fd_find;
 pub mod fnm;
@@ -185,6 +186,10 @@ pub fn all_app_entries() -> Vec<AppEntry> {
             url: "https://github.com/moncho/dry",
         },
         AppEntry {
+            id:  "dust",
+            url: "https://github.com/bootandy/dust",
+        },
+        AppEntry {
             id:  "eza",
             url: "https://github.com/eza-community/eza",
         },
@@ -332,6 +337,7 @@ pub fn create_app(
         "difft" => Some(Box::new(difftastic::Difftastic::new(client))),
         "dockmate" => Some(Box::new(dock_mate::DockMate::new(client))),
         "dry" => Some(Box::new(dry::Dry::new(client))),
+        "dust" => Some(Box::new(dust::Dust::new(client))),
         "eza" => Some(Box::new(eza::Eza::new(client))),
         "fd" => Some(Box::new(fd_find::FdFind::new(client))),
         "fnm" => Some(Box::new(fnm::Fnm::new(client))),

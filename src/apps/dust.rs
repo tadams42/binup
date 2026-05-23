@@ -1,0 +1,147 @@
+use std::path::Path;
+use std::sync::Arc;
+
+use anyhow::{Result, anyhow};
+
+use crate::apps::App;
+use crate::archive::ArchiveExtractor;
+use crate::github::GithubClient;
+use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::version::AppVersion;
+
+pub struct Dust {
+    client: Arc<GithubClient>,
+}
+
+impl Dust {
+    const OWNER: &'static str = "bootandy";
+    const REPO: &'static str = "dust";
+    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+}
+
+impl App for Dust {
+    fn exe_name(&self) -> &str { "dust" }
+    fn url(&self) -> &str { "https://github.com/bootandy/dust" }
+
+    fn released_version(&self) -> Result<AppVersion> {
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
+    }
+
+    fn download(&self) -> Result<DownloadedAssets> {
+        let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
+
+        // Binary: x86_64 musl static build
+        let bin_name = release
+            .asset_names()
+            .into_iter()
+            .find(|a| a.contains("x86_64-unknown-linux-musl") && a.ends_with(".tar.gz"))
+            .ok_or_else(|| anyhow!("Can't find dust musl binary asset"))?;
+        let asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
+        let extractor = ArchiveExtractor::new(&bin_name, asset.data);
+        let members = extractor.members()?;
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "dust")
+                    .unwrap_or(false)
+            })
+            .cloned()
+            .ok_or_else(|| anyhow!("Can't find dust executable in archive"))?;
+        let binary_data = extractor.extract(&exe)?;
+
+        // Man pages + completions: from the amd64 deb
+        let deb_name = release
+            .asset_names()
+            .into_iter()
+            .find(|a| a.starts_with("du-dust_") && a.ends_with("_amd64.deb"))
+            .ok_or_else(|| anyhow!("Can't find du-dust deb asset"))?;
+        let deb_asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &deb_name)?;
+        let deb_extractor = ArchiveExtractor::new(&deb_name, deb_asset.data);
+
+        // deb is an ar archive; find the data.tar.* member (gz/xz/zst)
+        let deb_members = deb_extractor.members()?;
+        let data_tar_name = deb_members
+            .iter()
+            .find(|m| m.starts_with("data.tar"))
+            .cloned()
+            .ok_or_else(|| anyhow!("Can't find data.tar in deb"))?;
+        let data_tar_data = deb_extractor.extract(&data_tar_name)?;
+
+        let data_extractor = ArchiveExtractor::new(&data_tar_name, data_tar_data);
+        let data_members = data_extractor.members()?;
+
+        // Man pages — may be stored as .N.gz inside the tar
+        let mut man_pages = Vec::new();
+        for member in &data_members {
+            if !member.contains("/man/") {
+                continue;
+            }
+            let path = Path::new(member);
+            let file_name = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
+
+            if let Some(stem) = file_name.strip_suffix(".gz") {
+                // e.g. dust.1.gz → decompress, install as dust.1
+                if let Some(Ok(section)) = Path::new(stem)
+                    .extension()
+                    .and_then(|e| e.to_str())
+                    .map(|e| e.parse::<u8>())
+                {
+                    let compressed = data_extractor.extract(member)?;
+                    let decompressed =
+                        ArchiveExtractor::new("man.gz", compressed).extract("man")?;
+                    man_pages.push(ManPage::new(section, stem, decompressed));
+                }
+            } else if let Some(Ok(section)) = path
+                .extension()
+                .and_then(|e| e.to_str())
+                .map(|e| e.parse::<u8>())
+            {
+                let data = data_extractor.extract(member)?;
+                man_pages.push(ManPage::new(section, file_name, data));
+            }
+        }
+
+        // Completions
+        let mut completions = Vec::new();
+        if let Some(m) = data_members.iter().find(|m| {
+            m.contains("bash-completion")
+                && Path::new(m)
+                    .file_name()
+                    .map(|f| f == "dust")
+                    .unwrap_or(false)
+        }) {
+            completions.push(Completion::bash("dust", data_extractor.extract(m)?));
+        }
+        if let Some(m) = data_members.iter().find(|m| {
+            Path::new(m)
+                .file_name()
+                .map(|f| f == "_dust")
+                .unwrap_or(false)
+        }) {
+            completions.push(Completion::zsh("dust", data_extractor.extract(m)?));
+        }
+        if let Some(m) = data_members.iter().find(|m| {
+            Path::new(m)
+                .file_name()
+                .map(|f| f == "dust.fish")
+                .unwrap_or(false)
+        }) {
+            completions.push(Completion::fish("dust", data_extractor.extract(m)?));
+        }
+
+        Ok(DownloadedAssets {
+            binary: Some(AppBinary::new("dust", binary_data)),
+            man_pages,
+            completions,
+            ..Default::default()
+        })
+    }
+}

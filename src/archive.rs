@@ -21,6 +21,7 @@ impl ArchiveExtractor {
         n.ends_with(".tar.gz")
             || n.ends_with(".tar.bz2")
             || n.ends_with(".tar.xz")
+            || n.ends_with(".tar.zst")
             || n.ends_with(".tar")
     }
 
@@ -87,6 +88,8 @@ impl ArchiveExtractor {
             Box::new(bzip2::read::BzDecoder::new(cursor))
         } else if n.ends_with(".tar.xz") {
             Box::new(xz2::read::XzDecoder::new(cursor))
+        } else if n.ends_with(".tar.zst") {
+            Box::new(zstd::Decoder::new(cursor)?)
         } else {
             Box::new(cursor)
         };
