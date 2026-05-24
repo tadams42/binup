@@ -23,6 +23,10 @@ impl SdEdit {
 impl App for SdEdit {
     fn exe_name(&self) -> &str { "sd" }
 
+    // NOTE: sd v1.1.0 has an upstream packaging bug — the binary inside the release
+    // tarball reports "sd 1.0.0" regardless of the actual release tag. This causes
+    // relget to reinstall sd on every run until upstream fixes their release pipeline.
+
     fn released_version(&self) -> Result<AppVersion> {
         self.client
             .latest_release(Self::OWNER, Self::REPO)?
