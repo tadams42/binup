@@ -13,6 +13,8 @@ pub struct Lazygit {
 }
 
 impl Lazygit {
+    pub const DESCRIPTION: &'static str = "Simple terminal UI for git commands";
+    pub const URL: &'static str = "https://github.com/jesseduffield/lazygit";
     const OWNER: &'static str = "jesseduffield";
     const REPO: &'static str = "lazygit";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl Lazygit {
 
 impl App for Lazygit {
     fn exe_name(&self) -> &str { "lazygit" }
-    fn url(&self) -> &str { "https://github.com/jesseduffield/lazygit" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

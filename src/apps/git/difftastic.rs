@@ -13,6 +13,8 @@ pub struct Difftastic {
 }
 
 impl Difftastic {
+    pub const DESCRIPTION: &'static str = "Structural diff tool that understands code syntax";
+    pub const URL: &'static str = "https://github.com/Wilfred/difftastic";
     const OWNER: &'static str = "Wilfred";
     const REPO: &'static str = "difftastic";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl Difftastic {
 
 impl App for Difftastic {
     fn exe_name(&self) -> &str { "difft" }
-    fn url(&self) -> &str { "https://github.com/Wilfred/difftastic" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

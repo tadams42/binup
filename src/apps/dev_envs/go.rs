@@ -17,6 +17,8 @@ impl Default for Go {
 }
 
 impl Go {
+    pub const DESCRIPTION: &'static str = "Go programming language toolchain";
+    pub const URL: &'static str = "https://go.dev/";
     pub fn new() -> Self {
         let cache_dir = dirs::home_dir()
             .unwrap_or_else(|| PathBuf::from("."))
@@ -30,7 +32,6 @@ impl Go {
 
 impl App for Go {
     fn exe_name(&self) -> &str { "go" }
-    fn url(&self) -> &str { "https://go.dev/" }
     fn installed_version_flag(&self) -> &str { "version" }
 
     fn released_version(&self) -> Result<AppVersion> {

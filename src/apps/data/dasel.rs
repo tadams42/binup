@@ -14,6 +14,8 @@ pub struct Dasel {
 }
 
 impl Dasel {
+    pub const DESCRIPTION: &'static str = "Query and modify data in JSON, YAML, TOML, XML, and CSV";
+    pub const URL: &'static str = "https://github.com/TomWright/dasel";
     const OWNER: &'static str = "TomWright";
     const REPO: &'static str = "dasel";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Dasel {
 
 impl App for Dasel {
     fn exe_name(&self) -> &str { "dasel" }
-    fn url(&self) -> &str { "https://github.com/TomWright/dasel" }
     fn installed_version_flag(&self) -> &str { "version" }
 
     fn released_version(&self) -> Result<AppVersion> {

@@ -14,6 +14,9 @@ pub struct Yq {
 }
 
 impl Yq {
+    pub const DESCRIPTION: &'static str =
+        "Portable command-line YAML, JSON, XML, and CSV processor";
+    pub const URL: &'static str = "https://github.com/mikefarah/yq";
     const OWNER: &'static str = "mikefarah";
     const REPO: &'static str = "yq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +24,6 @@ impl Yq {
 
 impl App for Yq {
     fn exe_name(&self) -> &str { "yq" }
-    fn url(&self) -> &str { "https://github.com/mikefarah/yq" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

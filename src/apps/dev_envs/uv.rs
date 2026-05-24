@@ -14,6 +14,8 @@ pub struct Uv {
 }
 
 impl Uv {
+    pub const DESCRIPTION: &'static str = "Extremely fast Python package and project manager";
+    pub const URL: &'static str = "https://github.com/astral-sh/uv";
     const OWNER: &'static str = "astral-sh";
     const REPO: &'static str = "uv";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Uv {
 
 impl App for Uv {
     fn exe_name(&self) -> &str { "uv" }
-    fn url(&self) -> &str { "https://github.com/astral-sh/uv" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

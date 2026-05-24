@@ -14,6 +14,9 @@ pub struct Starship {
 }
 
 impl Starship {
+    pub const DESCRIPTION: &'static str =
+        "Minimal, blazing-fast, infinitely customizable shell prompt";
+    pub const URL: &'static str = "https://github.com/starship/starship";
     const OWNER: &'static str = "starship";
     const REPO: &'static str = "starship";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +24,6 @@ impl Starship {
 
 impl App for Starship {
     fn exe_name(&self) -> &str { "starship" }
-    fn url(&self) -> &str { "https://github.com/starship/starship" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

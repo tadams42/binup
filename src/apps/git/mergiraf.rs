@@ -13,6 +13,8 @@ pub struct Mergiraf {
 }
 
 impl Mergiraf {
+    pub const DESCRIPTION: &'static str = "Syntax-aware merge driver for git";
+    pub const URL: &'static str = "https://codeberg.org/mergiraf/mergiraf";
     const OWNER: &'static str = "mergiraf";
     const REPO: &'static str = "mergiraf";
 
@@ -21,7 +23,6 @@ impl Mergiraf {
 
 impl App for Mergiraf {
     fn exe_name(&self) -> &str { "mergiraf" }
-    fn url(&self) -> &str { "https://codeberg.org/mergiraf/mergiraf" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

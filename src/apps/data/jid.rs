@@ -13,6 +13,8 @@ pub struct Jid {
 }
 
 impl Jid {
+    pub const DESCRIPTION: &'static str = "Interactive JSON incremental digger";
+    pub const URL: &'static str = "https://github.com/simeji/jid";
     const OWNER: &'static str = "simeji";
     const REPO: &'static str = "jid";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl Jid {
 
 impl App for Jid {
     fn exe_name(&self) -> &str { "jid" }
-    fn url(&self) -> &str { "https://github.com/simeji/jid" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

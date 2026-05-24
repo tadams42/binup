@@ -14,6 +14,8 @@ pub struct Xq {
 }
 
 impl Xq {
+    pub const DESCRIPTION: &'static str = "Command-line XML and HTML processor using XPath";
+    pub const URL: &'static str = "https://github.com/sibprogrammer/xq";
     const OWNER: &'static str = "sibprogrammer";
     const REPO: &'static str = "xq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Xq {
 
 impl App for Xq {
     fn exe_name(&self) -> &str { "xq" }
-    fn url(&self) -> &str { "https://github.com/sibprogrammer/xq" }
     fn installed_version_word_index(&self) -> isize { 2 }
 
     fn released_version(&self) -> Result<AppVersion> {

@@ -13,6 +13,8 @@ pub struct LazyDocker {
 }
 
 impl LazyDocker {
+    pub const DESCRIPTION: &'static str = "Terminal UI for Docker containers, images, and compose";
+    pub const URL: &'static str = "https://github.com/jesseduffield/lazydocker";
     const OWNER: &'static str = "jesseduffield";
     const REPO: &'static str = "lazydocker";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl LazyDocker {
 
 impl App for LazyDocker {
     fn exe_name(&self) -> &str { "lazydocker" }
-    fn url(&self) -> &str { "https://github.com/jesseduffield/lazydocker" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

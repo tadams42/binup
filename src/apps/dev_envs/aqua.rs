@@ -14,6 +14,8 @@ pub struct Aqua {
 }
 
 impl Aqua {
+    pub const DESCRIPTION: &'static str = "Declarative CLI tool installer and version manager";
+    pub const URL: &'static str = "https://github.com/aquaproj/aqua";
     const OWNER: &'static str = "aquaproj";
     const REPO: &'static str = "aqua";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Aqua {
 
 impl App for Aqua {
     fn exe_name(&self) -> &str { "aqua" }
-    fn url(&self) -> &str { "https://github.com/aquaproj/aqua" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

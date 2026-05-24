@@ -14,6 +14,8 @@ pub struct Ripgrep {
 }
 
 impl Ripgrep {
+    pub const DESCRIPTION: &'static str = "Recursive regex search, a faster grep (ripgrep)";
+    pub const URL: &'static str = "https://github.com/BurntSushi/ripgrep";
     const OWNER: &'static str = "BurntSushi";
     const REPO: &'static str = "ripgrep";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Ripgrep {
 
 impl App for Ripgrep {
     fn exe_name(&self) -> &str { "rg" }
-    fn url(&self) -> &str { "https://github.com/BurntSushi/ripgrep" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

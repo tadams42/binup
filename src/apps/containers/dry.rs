@@ -11,6 +11,8 @@ pub struct Dry {
 }
 
 impl Dry {
+    pub const DESCRIPTION: &'static str = "Interactive terminal application for Docker management";
+    pub const URL: &'static str = "https://github.com/moncho/dry";
     const OWNER: &'static str = "moncho";
     const REPO: &'static str = "dry";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -18,7 +20,6 @@ impl Dry {
 
 impl App for Dry {
     fn exe_name(&self) -> &str { "dry" }
-    fn url(&self) -> &str { "https://github.com/moncho/dry" }
     fn installed_version_word_index(&self) -> isize { 2 }
 
     fn released_version(&self) -> Result<AppVersion> {

@@ -14,6 +14,8 @@ pub struct Skim {
 }
 
 impl Skim {
+    pub const DESCRIPTION: &'static str = "Fuzzy finder in Rust (skim)";
+    pub const URL: &'static str = "https://github.com/skim-rs/skim";
     const OWNER: &'static str = "skim-rs";
     const REPO: &'static str = "skim";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Skim {
 
 impl App for Skim {
     fn exe_name(&self) -> &str { "sk" }
-    fn url(&self) -> &str { "https://github.com/skim-rs/skim" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -108,80 +108,80 @@ for the full list of caveats.
 
 ### Containers
 
-- [d4s](https://github.com/jr-k/d4s)
-- [dockmate](https://github.com/shubh-io/DockMate)
-- [dry](https://github.com/moncho/dry)
-- [lazydocker](https://github.com/jesseduffield/lazydocker)
+- [d4s](https://github.com/jr-k/d4s) — Docker socket proxy for restricting container API access
+- [dockmate](https://github.com/shubh-io/DockMate) — Terminal UI for managing Docker containers and images
+- [dry](https://github.com/moncho/dry) — Interactive terminal application for Docker management
+- [lazydocker](https://github.com/jesseduffield/lazydocker) — Terminal UI for Docker containers, images, and compose
 
 ### Data
 
-- [dasel](https://github.com/TomWright/dasel)
-- [fx](https://github.com/antonmedv/fx)
-- [gojq](https://github.com/itchyny/gojq)
-- [jid](https://github.com/simeji/jid)
-- [jq](https://github.com/jqlang/jq)
-- [jqp](https://github.com/noahgorstein/jqp)
-- [rsv](https://github.com/ribbondz/rsv)
-- [xq](https://github.com/sibprogrammer/xq)
-- [yq](https://github.com/mikefarah/yq)
+- [dasel](https://github.com/TomWright/dasel) — Query and modify data in JSON, YAML, TOML, XML, and CSV
+- [fx](https://github.com/antonmedv/fx) — Terminal JSON viewer and interactive processor
+- [gojq](https://github.com/itchyny/gojq) — Pure Go implementation of jq with extended features
+- [jid](https://github.com/simeji/jid) — Interactive JSON incremental digger
+- [jq](https://github.com/jqlang/jq) — Lightweight command-line JSON processor
+- [jqp](https://github.com/noahgorstein/jqp) — TUI playground for crafting jq queries
+- [rsv](https://github.com/ribbondz/rsv) — High-performance CSV/TSV toolkit for data exploration
+- [xq](https://github.com/sibprogrammer/xq) — Command-line XML and HTML processor using XPath
+- [yq](https://github.com/mikefarah/yq) — Portable command-line YAML, JSON, XML, and CSV processor
 
 ### Dev envs
 
-- [aqua](https://github.com/aquaproj/aqua)
-- [fnm](https://github.com/Schniz/fnm)
-- [mise](https://github.com/jdx/mise)
-- [uv](https://github.com/astral-sh/uv)
+- [aqua](https://github.com/aquaproj/aqua) — Declarative CLI tool installer and version manager
+- [fnm](https://github.com/Schniz/fnm) — Fast and simple Node.js version manager
+- [mise](https://github.com/jdx/mise) — Polyglot tool version manager and task runner
+- [uv](https://github.com/astral-sh/uv) — Extremely fast Python package and project manager
 
 ### Dev tools
 
-- [ast-grep](https://github.com/ast-grep/ast-grep)
-- [mdbook](https://github.com/rust-lang/mdBook)
-- [neovide](https://github.com/neovide/neovide)
-- [rust-analyzer](https://github.com/rust-lang/rust-analyzer)
-- [stylua](https://github.com/JohnnyMorganz/stylua)
+- [ast-grep](https://github.com/ast-grep/ast-grep) — Fast code search, lint, and rewriting using AST patterns
+- [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
+- [neovide](https://github.com/neovide/neovide) — GPU-accelerated GUI frontend for Neovim
+- [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration
+- [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
 
 ### Files
 
-- [bat](https://github.com/sharkdp/bat)
-- [dust](https://github.com/bootandy/dust)
-- [eza](https://github.com/eza-community/eza)
-- [fd](https://github.com/sharkdp/fd)
-- [rg](https://github.com/BurntSushi/ripgrep)
-- [sd](https://github.com/chmln/sd)
-- [yazi](https://github.com/sxyazi/yazi)
+- [bat](https://github.com/sharkdp/bat) — cat clone with syntax highlighting and git integration
+- [dust](https://github.com/bootandy/dust) — Intuitive disk usage visualizer, a du alternative
+- [eza](https://github.com/eza-community/eza) — Modern replacement for ls with icons and git integration
+- [fd](https://github.com/sharkdp/fd) — Simple, fast, user-friendly alternative to find
+- [rg](https://github.com/BurntSushi/ripgrep) — Recursive regex search, a faster grep (ripgrep)
+- [sd](https://github.com/chmln/sd) — Intuitive find-and-replace command, a sed alternative
+- [yazi](https://github.com/sxyazi/yazi) — Blazing fast terminal file manager with asynchronous I/O
 
 ### Git
 
-- [delta](https://github.com/dandavison/delta)
-- [difft](https://github.com/Wilfred/difftastic)
-- [gitleaks](https://github.com/gitleaks/gitleaks)
-- [lazygit](https://github.com/jesseduffield/lazygit)
-- [mergiraf](https://codeberg.org/mergiraf/mergiraf)
+- [delta](https://github.com/dandavison/delta) — Syntax-highlighting pager for git, diff, and grep output
+- [difft](https://github.com/Wilfred/difftastic) — Structural diff tool that understands code syntax
+- [gitleaks](https://github.com/gitleaks/gitleaks) — Detect secrets and sensitive data in git repositories
+- [lazygit](https://github.com/jesseduffield/lazygit) — Simple terminal UI for git commands
+- [mergiraf](https://codeberg.org/mergiraf/mergiraf) — Syntax-aware merge driver for git
 
 ### HTTP
 
-- [caddy](https://github.com/caddyserver/caddy)
-- [restish](https://github.com/rest-sh/restish)
-- [xh](https://github.com/ducaale/xh)
+- [caddy](https://github.com/caddyserver/caddy) — Fast, automatic HTTPS web server with TLS
+- [restish](https://github.com/rest-sh/restish) — CLI for interacting with REST-ish HTTP APIs
+- [xh](https://github.com/ducaale/xh) — Friendly and fast HTTP client, HTTPie alternative
 
 ### Logs
 
-- [gonzo](https://github.com/control-theory/gonzo)
-- [lazyjournal](https://github.com/Lifailon/lazyjournal)
+- [gonzo](https://github.com/control-theory/gonzo) — Log viewer TUI for structured and plain-text logs
+- [lazyjournal](https://github.com/Lifailon/lazyjournal) — TUI for browsing systemd journal and Docker logs
 
 ### Other
 
-- [chezmoi](https://github.com/twpayne/chezmoi)
-- [rclone](https://github.com/rclone/rclone)
+- [chezmoi](https://github.com/twpayne/chezmoi) — Dotfiles manager across multiple machines
+- [rclone](https://github.com/rclone/rclone) — rsync for cloud storage (S3, GDrive, Dropbox, and more)
 
 ### Shell
 
-- [atuin](https://github.com/atuinsh/atuin)
-- [carapace](https://github.com/carapace-sh/carapace-bin)
-- [fzf](https://github.com/junegunn/fzf)
-- [sk](https://github.com/skim-rs/skim)
-- [starship](https://github.com/starship/starship)
-- [zoxide](https://github.com/ajeetdsouza/zoxide)
+- [atuin](https://github.com/atuinsh/atuin) — Shell history search backed by SQLite with sync
+- [carapace](https://github.com/carapace-sh/carapace-bin) — Multi-shell completion generator for command-line tools
+- [fzf](https://github.com/junegunn/fzf) — General-purpose command-line fuzzy finder
+- [sk](https://github.com/skim-rs/skim) — Fuzzy finder in Rust (skim)
+- [starship](https://github.com/starship/starship) — Minimal, blazing-fast, infinitely customizable shell prompt
+- [zoxide](https://github.com/ajeetdsouza/zoxide) — Smarter cd command with frecency-based directory jumping
 
 [^1]: Previously, `relget` had been written in Python.
       Workflow that required me to deploy Python to be able to deploy `relget` to be

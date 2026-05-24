@@ -13,6 +13,8 @@ pub struct Neovide {
 }
 
 impl Neovide {
+    pub const DESCRIPTION: &'static str = "GPU-accelerated GUI frontend for Neovim";
+    pub const URL: &'static str = "https://github.com/neovide/neovide";
     const OWNER: &'static str = "neovide";
     const REPO: &'static str = "neovide";
     const FALLBACK_VERSION: &'static str = "0.15.2";
@@ -21,7 +23,6 @@ impl Neovide {
 
 impl App for Neovide {
     fn exe_name(&self) -> &str { "neovide" }
-    fn url(&self) -> &str { "https://github.com/neovide/neovide" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

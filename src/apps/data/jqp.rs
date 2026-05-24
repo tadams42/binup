@@ -13,6 +13,8 @@ pub struct Jqp {
 }
 
 impl Jqp {
+    pub const DESCRIPTION: &'static str = "TUI playground for crafting jq queries";
+    pub const URL: &'static str = "https://github.com/noahgorstein/jqp";
     const OWNER: &'static str = "noahgorstein";
     const REPO: &'static str = "jqp";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl Jqp {
 
 impl App for Jqp {
     fn exe_name(&self) -> &str { "jqp" }
-    fn url(&self) -> &str { "https://github.com/noahgorstein/jqp" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -14,6 +14,8 @@ pub struct FdFind {
 }
 
 impl FdFind {
+    pub const DESCRIPTION: &'static str = "Simple, fast, user-friendly alternative to find";
+    pub const URL: &'static str = "https://github.com/sharkdp/fd";
     const OWNER: &'static str = "sharkdp";
     const REPO: &'static str = "fd";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl FdFind {
 
 impl App for FdFind {
     fn exe_name(&self) -> &str { "fd" }
-    fn url(&self) -> &str { "https://github.com/sharkdp/fd" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

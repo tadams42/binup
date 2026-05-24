@@ -14,6 +14,8 @@ pub struct Fzf {
 }
 
 impl Fzf {
+    pub const DESCRIPTION: &'static str = "General-purpose command-line fuzzy finder";
+    pub const URL: &'static str = "https://github.com/junegunn/fzf";
     const OWNER: &'static str = "junegunn";
     const REPO: &'static str = "fzf";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Fzf {
 
 impl App for Fzf {
     fn exe_name(&self) -> &str { "fzf" }
-    fn url(&self) -> &str { "https://github.com/junegunn/fzf" }
     fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {

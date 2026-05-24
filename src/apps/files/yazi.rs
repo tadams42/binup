@@ -108,6 +108,9 @@ pub struct Yazi {
 }
 
 impl Yazi {
+    pub const DESCRIPTION: &'static str =
+        "Blazing fast terminal file manager with asynchronous I/O";
+    pub const URL: &'static str = "https://github.com/sxyazi/yazi";
     const OWNER: &'static str = "sxyazi";
     const REPO: &'static str = "yazi";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -115,7 +118,6 @@ impl Yazi {
 
 impl App for Yazi {
     fn exe_name(&self) -> &str { "yazi" }
-    fn url(&self) -> &str { "https://github.com/sxyazi/yazi" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

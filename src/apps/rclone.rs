@@ -14,6 +14,8 @@ pub struct Rclone {
 }
 
 impl Rclone {
+    pub const DESCRIPTION: &'static str = "rsync for cloud storage (S3, GDrive, Dropbox, and more)";
+    pub const URL: &'static str = "https://github.com/rclone/rclone";
     const OWNER: &'static str = "rclone";
     const REPO: &'static str = "rclone";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Rclone {
 
 impl App for Rclone {
     fn exe_name(&self) -> &str { "rclone" }
-    fn url(&self) -> &str { "https://github.com/rclone/rclone" }
     fn installed_version_flag(&self) -> &str { "version" }
 
     fn released_version(&self) -> Result<AppVersion> {

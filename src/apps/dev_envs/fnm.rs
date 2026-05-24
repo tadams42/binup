@@ -14,6 +14,8 @@ pub struct Fnm {
 }
 
 impl Fnm {
+    pub const DESCRIPTION: &'static str = "Fast and simple Node.js version manager";
+    pub const URL: &'static str = "https://github.com/Schniz/fnm";
     const OWNER: &'static str = "Schniz";
     const REPO: &'static str = "fnm";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Fnm {
 
 impl App for Fnm {
     fn exe_name(&self) -> &str { "fnm" }
-    fn url(&self) -> &str { "https://github.com/Schniz/fnm" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

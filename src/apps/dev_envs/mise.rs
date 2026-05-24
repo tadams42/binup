@@ -14,6 +14,8 @@ pub struct Mise {
 }
 
 impl Mise {
+    pub const DESCRIPTION: &'static str = "Polyglot tool version manager and task runner";
+    pub const URL: &'static str = "https://github.com/jdx/mise";
     const OWNER: &'static str = "jdx";
     const REPO: &'static str = "mise";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Mise {
 
 impl App for Mise {
     fn exe_name(&self) -> &str { "mise" }
-    fn url(&self) -> &str { "https://github.com/jdx/mise" }
     fn installed_version_flag(&self) -> &str { "version" }
     fn installed_version_word_index(&self) -> isize { 0 }
 

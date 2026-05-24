@@ -14,6 +14,8 @@ pub struct Restish {
 }
 
 impl Restish {
+    pub const DESCRIPTION: &'static str = "CLI for interacting with REST-ish HTTP APIs";
+    pub const URL: &'static str = "https://github.com/rest-sh/restish";
     const OWNER: &'static str = "rest-sh";
     const REPO: &'static str = "restish";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Restish {
 
 impl App for Restish {
     fn exe_name(&self) -> &str { "restish" }
-    fn url(&self) -> &str { "https://github.com/rest-sh/restish" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

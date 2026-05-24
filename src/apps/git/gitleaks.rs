@@ -14,6 +14,8 @@ pub struct Gitleaks {
 }
 
 impl Gitleaks {
+    pub const DESCRIPTION: &'static str = "Detect secrets and sensitive data in git repositories";
+    pub const URL: &'static str = "https://github.com/gitleaks/gitleaks";
     const OWNER: &'static str = "gitleaks";
     const REPO: &'static str = "gitleaks";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Gitleaks {
 
 impl App for Gitleaks {
     fn exe_name(&self) -> &str { "gitleaks" }
-    fn url(&self) -> &str { "https://github.com/gitleaks/gitleaks" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

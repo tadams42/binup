@@ -13,6 +13,9 @@ pub struct Eza {
 }
 
 impl Eza {
+    pub const DESCRIPTION: &'static str =
+        "Modern replacement for ls with icons and git integration";
+    pub const URL: &'static str = "https://github.com/eza-community/eza";
     const OWNER: &'static str = "eza-community";
     const REPO: &'static str = "eza";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +23,6 @@ impl Eza {
 
 impl App for Eza {
     fn exe_name(&self) -> &str { "eza" }
-    fn url(&self) -> &str { "https://github.com/eza-community/eza" }
     fn installed_version_word_index(&self) -> isize { -3 }
 
     fn released_version(&self) -> Result<AppVersion> {

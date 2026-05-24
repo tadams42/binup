@@ -14,6 +14,8 @@ pub struct Atuin {
 }
 
 impl Atuin {
+    pub const DESCRIPTION: &'static str = "Shell history search backed by SQLite with sync";
+    pub const URL: &'static str = "https://github.com/atuinsh/atuin";
     const OWNER: &'static str = "atuinsh";
     const REPO: &'static str = "atuin";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Atuin {
 
 impl App for Atuin {
     fn exe_name(&self) -> &str { "atuin" }
-    fn url(&self) -> &str { "https://github.com/atuinsh/atuin" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

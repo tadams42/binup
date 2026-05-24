@@ -13,6 +13,8 @@ pub struct SdEdit {
 }
 
 impl SdEdit {
+    pub const DESCRIPTION: &'static str = "Intuitive find-and-replace command, a sed alternative";
+    pub const URL: &'static str = "https://github.com/chmln/sd";
     const OWNER: &'static str = "chmln";
     const REPO: &'static str = "sd";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl SdEdit {
 
 impl App for SdEdit {
     fn exe_name(&self) -> &str { "sd" }
-    fn url(&self) -> &str { "https://github.com/chmln/sd" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

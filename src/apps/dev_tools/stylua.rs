@@ -13,6 +13,8 @@ pub struct Stylua {
 }
 
 impl Stylua {
+    pub const DESCRIPTION: &'static str = "Opinionated Lua code formatter";
+    pub const URL: &'static str = "https://github.com/JohnnyMorganz/stylua";
     const OWNER: &'static str = "JohnnyMorganz";
     const REPO: &'static str = "stylua";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl Stylua {
 
 impl App for Stylua {
     fn exe_name(&self) -> &str { "stylua" }
-    fn url(&self) -> &str { "https://github.com/JohnnyMorganz/stylua" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

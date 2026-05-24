@@ -11,6 +11,8 @@ pub struct LazyJournal {
 }
 
 impl LazyJournal {
+    pub const DESCRIPTION: &'static str = "TUI for browsing systemd journal and Docker logs";
+    pub const URL: &'static str = "https://github.com/Lifailon/lazyjournal";
     const OWNER: &'static str = "Lifailon";
     const REPO: &'static str = "lazyjournal";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -18,7 +20,6 @@ impl LazyJournal {
 
 impl App for LazyJournal {
     fn exe_name(&self) -> &str { "lazyjournal" }
-    fn url(&self) -> &str { "https://github.com/Lifailon/lazyjournal" }
     fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {

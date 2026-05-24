@@ -14,6 +14,8 @@ pub struct Mdbook {
 }
 
 impl Mdbook {
+    pub const DESCRIPTION: &'static str = "Create books from Markdown source files";
+    pub const URL: &'static str = "https://github.com/rust-lang/mdBook";
     const OWNER: &'static str = "rust-lang";
     const REPO: &'static str = "mdBook";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Mdbook {
 
 impl App for Mdbook {
     fn exe_name(&self) -> &str { "mdbook" }
-    fn url(&self) -> &str { "https://github.com/rust-lang/mdBook" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

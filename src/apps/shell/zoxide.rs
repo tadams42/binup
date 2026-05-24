@@ -13,6 +13,9 @@ pub struct Zoxide {
 }
 
 impl Zoxide {
+    pub const DESCRIPTION: &'static str =
+        "Smarter cd command with frecency-based directory jumping";
+    pub const URL: &'static str = "https://github.com/ajeetdsouza/zoxide";
     const OWNER: &'static str = "ajeetdsouza";
     const REPO: &'static str = "zoxide";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +23,6 @@ impl Zoxide {
 
 impl App for Zoxide {
     fn exe_name(&self) -> &str { "zoxide" }
-    fn url(&self) -> &str { "https://github.com/ajeetdsouza/zoxide" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

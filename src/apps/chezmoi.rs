@@ -14,6 +14,8 @@ pub struct Chezmoi {
 }
 
 impl Chezmoi {
+    pub const DESCRIPTION: &'static str = "Dotfiles manager across multiple machines";
+    pub const URL: &'static str = "https://github.com/twpayne/chezmoi";
     const OWNER: &'static str = "twpayne";
     const REPO: &'static str = "chezmoi";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Chezmoi {
 
 impl App for Chezmoi {
     fn exe_name(&self) -> &str { "chezmoi" }
-    fn url(&self) -> &str { "https://github.com/twpayne/chezmoi" }
     fn installed_version_word_index(&self) -> isize { 2 }
 
     fn released_version(&self) -> Result<AppVersion> {

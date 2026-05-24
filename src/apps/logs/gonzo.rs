@@ -14,6 +14,8 @@ pub struct Gonzo {
 }
 
 impl Gonzo {
+    pub const DESCRIPTION: &'static str = "Log viewer TUI for structured and plain-text logs";
+    pub const URL: &'static str = "https://github.com/control-theory/gonzo";
     const OWNER: &'static str = "control-theory";
     const REPO: &'static str = "gonzo";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Gonzo {
 
 impl App for Gonzo {
     fn exe_name(&self) -> &str { "gonzo" }
-    fn url(&self) -> &str { "https://github.com/control-theory/gonzo" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

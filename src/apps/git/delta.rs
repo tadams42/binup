@@ -14,6 +14,9 @@ pub struct Delta {
 }
 
 impl Delta {
+    pub const DESCRIPTION: &'static str =
+        "Syntax-highlighting pager for git, diff, and grep output";
+    pub const URL: &'static str = "https://github.com/dandavison/delta";
     const OWNER: &'static str = "dandavison";
     const REPO: &'static str = "delta";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +24,6 @@ impl Delta {
 
 impl App for Delta {
     fn exe_name(&self) -> &str { "delta" }
-    fn url(&self) -> &str { "https://github.com/dandavison/delta" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

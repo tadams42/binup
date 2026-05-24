@@ -13,6 +13,8 @@ pub struct Carapace {
 }
 
 impl Carapace {
+    pub const DESCRIPTION: &'static str = "Multi-shell completion generator for command-line tools";
+    pub const URL: &'static str = "https://github.com/carapace-sh/carapace-bin";
     const OWNER: &'static str = "carapace-sh";
     const REPO: &'static str = "carapace-bin";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl Carapace {
 
 impl App for Carapace {
     fn exe_name(&self) -> &str { "carapace" }
-    fn url(&self) -> &str { "https://github.com/carapace-sh/carapace-bin" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

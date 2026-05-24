@@ -12,6 +12,8 @@ pub struct RustAnalyzer {
 }
 
 impl RustAnalyzer {
+    pub const DESCRIPTION: &'static str = "Rust language server providing IDE integration";
+    pub const URL: &'static str = "https://github.com/rust-lang/rust-analyzer";
     const OWNER: &'static str = "rust-lang";
     const REPO: &'static str = "rust-analyzer";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -19,7 +21,6 @@ impl RustAnalyzer {
 
 impl App for RustAnalyzer {
     fn exe_name(&self) -> &str { "rust-analyzer" }
-    fn url(&self) -> &str { "https://github.com/rust-lang/rust-analyzer" }
     fn installed_version_word_index(&self) -> isize { -2 }
 
     fn released_version(&self) -> Result<AppVersion> {

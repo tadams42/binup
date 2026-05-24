@@ -14,6 +14,8 @@ pub struct Bat {
 }
 
 impl Bat {
+    pub const DESCRIPTION: &'static str = "cat clone with syntax highlighting and git integration";
+    pub const URL: &'static str = "https://github.com/sharkdp/bat";
     const OWNER: &'static str = "sharkdp";
     const REPO: &'static str = "bat";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Bat {
 
 impl App for Bat {
     fn exe_name(&self) -> &str { "bat" }
-    fn url(&self) -> &str { "https://github.com/sharkdp/bat" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

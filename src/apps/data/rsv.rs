@@ -13,6 +13,8 @@ pub struct Rsv {
 }
 
 impl Rsv {
+    pub const DESCRIPTION: &'static str = "High-performance CSV/TSV toolkit for data exploration";
+    pub const URL: &'static str = "https://github.com/ribbondz/rsv";
     const OWNER: &'static str = "ribbondz";
     const REPO: &'static str = "rsv";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl Rsv {
 
 impl App for Rsv {
     fn exe_name(&self) -> &str { "rsv" }
-    fn url(&self) -> &str { "https://github.com/ribbondz/rsv" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

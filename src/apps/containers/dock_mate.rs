@@ -11,6 +11,8 @@ pub struct DockMate {
 }
 
 impl DockMate {
+    pub const DESCRIPTION: &'static str = "Terminal UI for managing Docker containers and images";
+    pub const URL: &'static str = "https://github.com/shubh-io/DockMate";
     const OWNER: &'static str = "shubh-io";
     const REPO: &'static str = "DockMate";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -18,7 +20,6 @@ impl DockMate {
 
 impl App for DockMate {
     fn exe_name(&self) -> &str { "dockmate" }
-    fn url(&self) -> &str { "https://github.com/shubh-io/DockMate" }
     fn installed_version_word_index(&self) -> isize { 2 }
 
     fn released_version(&self) -> Result<AppVersion> {

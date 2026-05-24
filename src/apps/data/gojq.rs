@@ -13,6 +13,8 @@ pub struct GoJq {
 }
 
 impl GoJq {
+    pub const DESCRIPTION: &'static str = "Pure Go implementation of jq with extended features";
+    pub const URL: &'static str = "https://github.com/itchyny/gojq";
     const OWNER: &'static str = "itchyny";
     const REPO: &'static str = "gojq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -20,7 +22,6 @@ impl GoJq {
 
 impl App for GoJq {
     fn exe_name(&self) -> &str { "gojq" }
-    fn url(&self) -> &str { "https://github.com/itchyny/gojq" }
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {

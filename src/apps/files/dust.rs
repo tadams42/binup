@@ -82,6 +82,8 @@ pub struct Dust {
 }
 
 impl Dust {
+    pub const DESCRIPTION: &'static str = "Intuitive disk usage visualizer, a du alternative";
+    pub const URL: &'static str = "https://github.com/bootandy/dust";
     const OWNER: &'static str = "bootandy";
     const REPO: &'static str = "dust";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -89,7 +91,6 @@ impl Dust {
 
 impl App for Dust {
     fn exe_name(&self) -> &str { "dust" }
-    fn url(&self) -> &str { "https://github.com/bootandy/dust" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -14,6 +14,8 @@ pub struct Caddy {
 }
 
 impl Caddy {
+    pub const DESCRIPTION: &'static str = "Fast, automatic HTTPS web server with TLS";
+    pub const URL: &'static str = "https://github.com/caddyserver/caddy";
     const OWNER: &'static str = "caddyserver";
     const REPO: &'static str = "caddy";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +23,6 @@ impl Caddy {
 
 impl App for Caddy {
     fn exe_name(&self) -> &str { "caddy" }
-    fn url(&self) -> &str { "https://github.com/caddyserver/caddy" }
     fn installed_version_flag(&self) -> &str { "version" }
     fn installed_version_word_index(&self) -> isize { 0 }
 

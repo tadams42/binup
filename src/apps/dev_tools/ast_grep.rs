@@ -14,6 +14,9 @@ pub struct AstGrep {
 }
 
 impl AstGrep {
+    pub const DESCRIPTION: &'static str =
+        "Fast code search, lint, and rewriting using AST patterns";
+    pub const URL: &'static str = "https://github.com/ast-grep/ast-grep";
     const OWNER: &'static str = "ast-grep";
     const REPO: &'static str = "ast-grep";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -21,7 +24,6 @@ impl AstGrep {
 
 impl App for AstGrep {
     fn exe_name(&self) -> &str { "ast-grep" }
-    fn url(&self) -> &str { "https://github.com/ast-grep/ast-grep" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client
