@@ -309,6 +309,18 @@ pub fn all_app_entries() -> Vec<AppEntry> {
             description: files::ripgrep::Ripgrep::DESCRIPTION,
         },
         AppEntry {
+            id:          "qsv",
+            url:         data::qsv::Qsv::URL,
+            category:    "data",
+            description: data::qsv::Qsv::DESCRIPTION,
+        },
+        AppEntry {
+            id:          "qsv-all",
+            url:         data::qsv_all::QsvAll::URL,
+            category:    "data",
+            description: data::qsv_all::QsvAll::DESCRIPTION,
+        },
+        AppEntry {
             id:          "rsv",
             url:         data::rsv::Rsv::URL,
             category:    "data",
@@ -430,6 +442,8 @@ pub fn create_app(
         "rclone" => Some(Box::new(rclone::Rclone::new(client))),
         "restish" => Some(Box::new(http::restish::Restish::new(client))),
         "rg" => Some(Box::new(files::ripgrep::Ripgrep::new(client))),
+        "qsv" => Some(Box::new(data::qsv::Qsv::new(client))),
+        "qsv-all" => Some(Box::new(data::qsv_all::QsvAll::new(client))),
         "rsv" => Some(Box::new(data::rsv::Rsv::new(client))),
         "rust-analyzer" => Some(Box::new(dev_tools::rust_analyzer::RustAnalyzer::new(client))),
         "sd" => Some(Box::new(files::sd_edit::SdEdit::new(client))),

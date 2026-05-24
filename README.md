@@ -121,6 +121,8 @@ for the full list of caveats.
 - [jid](https://github.com/simeji/jid) — Interactive JSON incremental digger
 - [jq](https://github.com/jqlang/jq) — Lightweight command-line JSON processor
 - [jqp](https://github.com/noahgorstein/jqp) — TUI playground for crafting jq queries
+- [qsv](https://github.com/dathere/qsv) — High-performance CSV data-wrangling toolkit
+- [qsv-all](https://github.com/dathere/qsv) — High-performance CSV data-wrangling toolkit (all variants)
 - [rsv](https://github.com/ribbondz/rsv) — High-performance CSV/TSV toolkit for data exploration
 - [xq](https://github.com/sibprogrammer/xq) — Command-line XML and HTML processor using XPath
 - [yq](https://github.com/mikefarah/yq) — Portable command-line YAML, JSON, XML, and CSV processor
