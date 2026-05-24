@@ -147,6 +147,7 @@ for the full list of caveats.
 - [fd](https://github.com/sharkdp/fd)
 - [rg](https://github.com/BurntSushi/ripgrep)
 - [sd](https://github.com/chmln/sd)
+- [yazi](https://github.com/sxyazi/yazi)
 
 ### Git
 

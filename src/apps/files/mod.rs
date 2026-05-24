@@ -4,3 +4,4 @@ pub mod eza;
 pub mod fd_find;
 pub mod ripgrep;
 pub mod sd_edit;
+pub mod yazi;

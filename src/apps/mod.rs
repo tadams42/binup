@@ -314,6 +314,11 @@ pub fn all_app_entries() -> Vec<AppEntry> {
             category: "data",
         },
         AppEntry {
+            id:       "yazi",
+            url:      "https://github.com/sxyazi/yazi",
+            category: "files",
+        },
+        AppEntry {
             id:       "yq",
             url:      "https://github.com/mikefarah/yq",
             category: "data",
@@ -381,6 +386,7 @@ pub fn create_app(
         "uv" => Some(Box::new(dev_envs::uv::Uv::new(client))),
         "xh" => Some(Box::new(http::xh::Xh::new(client))),
         "xq" => Some(Box::new(data::xq::Xq::new(client))),
+        "yazi" => Some(Box::new(files::yazi::Yazi::new(client))),
         "yq" => Some(Box::new(data::yq::Yq::new(client))),
         "zoxide" => Some(Box::new(shell::zoxide::Zoxide::new(client))),
         _ => None,
