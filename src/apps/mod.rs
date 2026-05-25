@@ -5,17 +5,29 @@ use crate::installer::install_assets;
 use crate::types::DownloadedAssets;
 use crate::version::AppVersion;
 
-pub mod chezmoi;
-pub mod containers;
-pub mod data;
-pub mod dev_envs;
-pub mod dev_tools;
-pub mod files;
-pub mod git;
-pub mod http;
-pub mod logs;
-pub mod rclone;
-pub mod shell;
+mod chezmoi;
+mod containers;
+mod data;
+mod dev_envs;
+mod dev_tools;
+mod files;
+mod git;
+mod http;
+mod logs;
+mod rclone;
+mod shell;
+
+pub use chezmoi::Chezmoi;
+pub use containers::{D4S, DockMate, Dry, LazyDocker};
+pub use data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
+pub use dev_envs::{Aqua, Fnm, Mise, Uv};
+pub use dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Stylua};
+pub use files::{Bat, Dust, Eza, FdFind, Ripgrep, SdEdit, Yazi};
+pub use git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
+pub use http::{Caddy, Restish, Xh};
+pub use logs::{Gonzo, LazyJournal};
+pub use rclone::Rclone;
+pub use shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 
 // ── App trait ────────────────────────────────────────────────────────────────
 
@@ -81,298 +93,298 @@ pub struct AppEntry {
 
 static ALL_APP_ENTRIES: &[AppEntry] = &[
     AppEntry {
-        id:          dev_envs::aqua::Aqua::ID,
-        url:         dev_envs::aqua::Aqua::URL,
+        id:          Aqua::ID,
+        url:         Aqua::URL,
         category:    "dev_envs",
-        description: dev_envs::aqua::Aqua::DESCRIPTION,
+        description: Aqua::DESCRIPTION,
     },
     AppEntry {
-        id:          dev_tools::ast_grep::AstGrep::ID,
-        url:         dev_tools::ast_grep::AstGrep::URL,
+        id:          AstGrep::ID,
+        url:         AstGrep::URL,
         category:    "dev_tools",
-        description: dev_tools::ast_grep::AstGrep::DESCRIPTION,
+        description: AstGrep::DESCRIPTION,
     },
     AppEntry {
-        id:          shell::atuin::Atuin::ID,
-        url:         shell::atuin::Atuin::URL,
+        id:          Atuin::ID,
+        url:         Atuin::URL,
         category:    "shell",
-        description: shell::atuin::Atuin::DESCRIPTION,
+        description: Atuin::DESCRIPTION,
     },
     AppEntry {
-        id:          files::bat::Bat::ID,
-        url:         files::bat::Bat::URL,
+        id:          Bat::ID,
+        url:         Bat::URL,
         category:    "files",
-        description: files::bat::Bat::DESCRIPTION,
+        description: Bat::DESCRIPTION,
     },
     AppEntry {
-        id:          http::caddy::Caddy::ID,
-        url:         http::caddy::Caddy::URL,
+        id:          Caddy::ID,
+        url:         Caddy::URL,
         category:    "http",
-        description: http::caddy::Caddy::DESCRIPTION,
+        description: Caddy::DESCRIPTION,
     },
     AppEntry {
-        id:          shell::carapace::Carapace::ID,
-        url:         shell::carapace::Carapace::URL,
+        id:          Carapace::ID,
+        url:         Carapace::URL,
         category:    "shell",
-        description: shell::carapace::Carapace::DESCRIPTION,
+        description: Carapace::DESCRIPTION,
     },
     AppEntry {
-        id:          chezmoi::Chezmoi::ID,
-        url:         chezmoi::Chezmoi::URL,
+        id:          Chezmoi::ID,
+        url:         Chezmoi::URL,
         category:    "other",
-        description: chezmoi::Chezmoi::DESCRIPTION,
+        description: Chezmoi::DESCRIPTION,
     },
     AppEntry {
-        id:          containers::d4s::D4S::ID,
-        url:         containers::d4s::D4S::URL,
+        id:          D4S::ID,
+        url:         D4S::URL,
         category:    "containers",
-        description: containers::d4s::D4S::DESCRIPTION,
+        description: D4S::DESCRIPTION,
     },
     AppEntry {
-        id:          data::dasel::Dasel::ID,
-        url:         data::dasel::Dasel::URL,
+        id:          Dasel::ID,
+        url:         Dasel::URL,
         category:    "data",
-        description: data::dasel::Dasel::DESCRIPTION,
+        description: Dasel::DESCRIPTION,
     },
     AppEntry {
-        id:          git::delta::Delta::ID,
-        url:         git::delta::Delta::URL,
+        id:          Delta::ID,
+        url:         Delta::URL,
         category:    "git",
-        description: git::delta::Delta::DESCRIPTION,
+        description: Delta::DESCRIPTION,
     },
     AppEntry {
-        id:          git::difftastic::Difftastic::ID,
-        url:         git::difftastic::Difftastic::URL,
+        id:          Difftastic::ID,
+        url:         Difftastic::URL,
         category:    "git",
-        description: git::difftastic::Difftastic::DESCRIPTION,
+        description: Difftastic::DESCRIPTION,
     },
     AppEntry {
-        id:          containers::dock_mate::DockMate::ID,
-        url:         containers::dock_mate::DockMate::URL,
+        id:          DockMate::ID,
+        url:         DockMate::URL,
         category:    "containers",
-        description: containers::dock_mate::DockMate::DESCRIPTION,
+        description: DockMate::DESCRIPTION,
     },
     AppEntry {
-        id:          containers::dry::Dry::ID,
-        url:         containers::dry::Dry::URL,
+        id:          Dry::ID,
+        url:         Dry::URL,
         category:    "containers",
-        description: containers::dry::Dry::DESCRIPTION,
+        description: Dry::DESCRIPTION,
     },
     AppEntry {
-        id:          files::dust::Dust::ID,
-        url:         files::dust::Dust::URL,
+        id:          Dust::ID,
+        url:         Dust::URL,
         category:    "files",
-        description: files::dust::Dust::DESCRIPTION,
+        description: Dust::DESCRIPTION,
     },
     AppEntry {
-        id:          files::eza::Eza::ID,
-        url:         files::eza::Eza::URL,
+        id:          Eza::ID,
+        url:         Eza::URL,
         category:    "files",
-        description: files::eza::Eza::DESCRIPTION,
+        description: Eza::DESCRIPTION,
     },
     AppEntry {
-        id:          files::fd_find::FdFind::ID,
-        url:         files::fd_find::FdFind::URL,
+        id:          FdFind::ID,
+        url:         FdFind::URL,
         category:    "files",
-        description: files::fd_find::FdFind::DESCRIPTION,
+        description: FdFind::DESCRIPTION,
     },
     AppEntry {
-        id:          dev_envs::fnm::Fnm::ID,
-        url:         dev_envs::fnm::Fnm::URL,
+        id:          Fnm::ID,
+        url:         Fnm::URL,
         category:    "dev_envs",
-        description: dev_envs::fnm::Fnm::DESCRIPTION,
+        description: Fnm::DESCRIPTION,
     },
     AppEntry {
-        id:          data::fx::Fx::ID,
-        url:         data::fx::Fx::URL,
+        id:          Fx::ID,
+        url:         Fx::URL,
         category:    "data",
-        description: data::fx::Fx::DESCRIPTION,
+        description: Fx::DESCRIPTION,
     },
     AppEntry {
-        id:          shell::fzf::Fzf::ID,
-        url:         shell::fzf::Fzf::URL,
+        id:          Fzf::ID,
+        url:         Fzf::URL,
         category:    "shell",
-        description: shell::fzf::Fzf::DESCRIPTION,
+        description: Fzf::DESCRIPTION,
     },
     AppEntry {
-        id:          git::gitleaks::Gitleaks::ID,
-        url:         git::gitleaks::Gitleaks::URL,
+        id:          Gitleaks::ID,
+        url:         Gitleaks::URL,
         category:    "git",
-        description: git::gitleaks::Gitleaks::DESCRIPTION,
+        description: Gitleaks::DESCRIPTION,
     },
     AppEntry {
-        id:          data::gojq::GoJq::ID,
-        url:         data::gojq::GoJq::URL,
+        id:          GoJq::ID,
+        url:         GoJq::URL,
         category:    "data",
-        description: data::gojq::GoJq::DESCRIPTION,
+        description: GoJq::DESCRIPTION,
     },
     AppEntry {
-        id:          logs::gonzo::Gonzo::ID,
-        url:         logs::gonzo::Gonzo::URL,
+        id:          Gonzo::ID,
+        url:         Gonzo::URL,
         category:    "logs",
-        description: logs::gonzo::Gonzo::DESCRIPTION,
+        description: Gonzo::DESCRIPTION,
     },
     AppEntry {
-        id:          data::jid::Jid::ID,
-        url:         data::jid::Jid::URL,
+        id:          Jid::ID,
+        url:         Jid::URL,
         category:    "data",
-        description: data::jid::Jid::DESCRIPTION,
+        description: Jid::DESCRIPTION,
     },
     AppEntry {
-        id:          data::jq::Jq::ID,
-        url:         data::jq::Jq::URL,
+        id:          Jq::ID,
+        url:         Jq::URL,
         category:    "data",
-        description: data::jq::Jq::DESCRIPTION,
+        description: Jq::DESCRIPTION,
     },
     AppEntry {
-        id:          data::jqp::Jqp::ID,
-        url:         data::jqp::Jqp::URL,
+        id:          Jqp::ID,
+        url:         Jqp::URL,
         category:    "data",
-        description: data::jqp::Jqp::DESCRIPTION,
+        description: Jqp::DESCRIPTION,
     },
     AppEntry {
-        id:          logs::lazy_journal::LazyJournal::ID,
-        url:         logs::lazy_journal::LazyJournal::URL,
+        id:          LazyJournal::ID,
+        url:         LazyJournal::URL,
         category:    "logs",
-        description: logs::lazy_journal::LazyJournal::DESCRIPTION,
+        description: LazyJournal::DESCRIPTION,
     },
     AppEntry {
-        id:          containers::lazydocker::LazyDocker::ID,
-        url:         containers::lazydocker::LazyDocker::URL,
+        id:          LazyDocker::ID,
+        url:         LazyDocker::URL,
         category:    "containers",
-        description: containers::lazydocker::LazyDocker::DESCRIPTION,
+        description: LazyDocker::DESCRIPTION,
     },
     AppEntry {
-        id:          git::lazygit::Lazygit::ID,
-        url:         git::lazygit::Lazygit::URL,
+        id:          Lazygit::ID,
+        url:         Lazygit::URL,
         category:    "git",
-        description: git::lazygit::Lazygit::DESCRIPTION,
+        description: Lazygit::DESCRIPTION,
     },
     AppEntry {
-        id:          dev_tools::mdbook::Mdbook::ID,
-        url:         dev_tools::mdbook::Mdbook::URL,
+        id:          Mdbook::ID,
+        url:         Mdbook::URL,
         category:    "dev_tools",
-        description: dev_tools::mdbook::Mdbook::DESCRIPTION,
+        description: Mdbook::DESCRIPTION,
     },
     AppEntry {
-        id:          git::mergiraf::Mergiraf::ID,
-        url:         git::mergiraf::Mergiraf::URL,
+        id:          Mergiraf::ID,
+        url:         Mergiraf::URL,
         category:    "git",
-        description: git::mergiraf::Mergiraf::DESCRIPTION,
+        description: Mergiraf::DESCRIPTION,
     },
     AppEntry {
-        id:          dev_envs::mise::Mise::ID,
-        url:         dev_envs::mise::Mise::URL,
+        id:          Mise::ID,
+        url:         Mise::URL,
         category:    "dev_envs",
-        description: dev_envs::mise::Mise::DESCRIPTION,
+        description: Mise::DESCRIPTION,
     },
     AppEntry {
-        id:          dev_tools::neovide::Neovide::ID,
-        url:         dev_tools::neovide::Neovide::URL,
+        id:          Neovide::ID,
+        url:         Neovide::URL,
         category:    "dev_tools",
-        description: dev_tools::neovide::Neovide::DESCRIPTION,
+        description: Neovide::DESCRIPTION,
     },
     AppEntry {
-        id:          rclone::Rclone::ID,
-        url:         rclone::Rclone::URL,
+        id:          Rclone::ID,
+        url:         Rclone::URL,
         category:    "other",
-        description: rclone::Rclone::DESCRIPTION,
+        description: Rclone::DESCRIPTION,
     },
     AppEntry {
-        id:          http::restish::Restish::ID,
-        url:         http::restish::Restish::URL,
+        id:          Restish::ID,
+        url:         Restish::URL,
         category:    "http",
-        description: http::restish::Restish::DESCRIPTION,
+        description: Restish::DESCRIPTION,
     },
     AppEntry {
-        id:          files::ripgrep::Ripgrep::ID,
-        url:         files::ripgrep::Ripgrep::URL,
+        id:          Ripgrep::ID,
+        url:         Ripgrep::URL,
         category:    "files",
-        description: files::ripgrep::Ripgrep::DESCRIPTION,
+        description: Ripgrep::DESCRIPTION,
     },
     AppEntry {
-        id:          data::qsv::Qsv::ID,
-        url:         data::qsv::Qsv::URL,
+        id:          Qsv::ID,
+        url:         Qsv::URL,
         category:    "data",
-        description: data::qsv::Qsv::DESCRIPTION,
+        description: Qsv::DESCRIPTION,
     },
     AppEntry {
-        id:          data::qsv_all::QsvAll::ID,
-        url:         data::qsv_all::QsvAll::URL,
+        id:          QsvAll::ID,
+        url:         QsvAll::URL,
         category:    "data",
-        description: data::qsv_all::QsvAll::DESCRIPTION,
+        description: QsvAll::DESCRIPTION,
     },
     AppEntry {
-        id:          data::rsv::Rsv::ID,
-        url:         data::rsv::Rsv::URL,
+        id:          Rsv::ID,
+        url:         Rsv::URL,
         category:    "data",
-        description: data::rsv::Rsv::DESCRIPTION,
+        description: Rsv::DESCRIPTION,
     },
     AppEntry {
-        id:          dev_tools::rust_analyzer::RustAnalyzer::ID,
-        url:         dev_tools::rust_analyzer::RustAnalyzer::URL,
+        id:          RustAnalyzer::ID,
+        url:         RustAnalyzer::URL,
         category:    "dev_tools",
-        description: dev_tools::rust_analyzer::RustAnalyzer::DESCRIPTION,
+        description: RustAnalyzer::DESCRIPTION,
     },
     AppEntry {
-        id:          files::sd_edit::SdEdit::ID,
-        url:         files::sd_edit::SdEdit::URL,
+        id:          SdEdit::ID,
+        url:         SdEdit::URL,
         category:    "files",
-        description: files::sd_edit::SdEdit::DESCRIPTION,
+        description: SdEdit::DESCRIPTION,
     },
     AppEntry {
-        id:          shell::skim::Skim::ID,
-        url:         shell::skim::Skim::URL,
+        id:          Skim::ID,
+        url:         Skim::URL,
         category:    "shell",
-        description: shell::skim::Skim::DESCRIPTION,
+        description: Skim::DESCRIPTION,
     },
     AppEntry {
-        id:          shell::starship::Starship::ID,
-        url:         shell::starship::Starship::URL,
+        id:          Starship::ID,
+        url:         Starship::URL,
         category:    "shell",
-        description: shell::starship::Starship::DESCRIPTION,
+        description: Starship::DESCRIPTION,
     },
     AppEntry {
-        id:          dev_tools::stylua::Stylua::ID,
-        url:         dev_tools::stylua::Stylua::URL,
+        id:          Stylua::ID,
+        url:         Stylua::URL,
         category:    "dev_tools",
-        description: dev_tools::stylua::Stylua::DESCRIPTION,
+        description: Stylua::DESCRIPTION,
     },
     AppEntry {
-        id:          dev_envs::uv::Uv::ID,
-        url:         dev_envs::uv::Uv::URL,
+        id:          Uv::ID,
+        url:         Uv::URL,
         category:    "dev_envs",
-        description: dev_envs::uv::Uv::DESCRIPTION,
+        description: Uv::DESCRIPTION,
     },
     AppEntry {
-        id:          http::xh::Xh::ID,
-        url:         http::xh::Xh::URL,
+        id:          Xh::ID,
+        url:         Xh::URL,
         category:    "http",
-        description: http::xh::Xh::DESCRIPTION,
+        description: Xh::DESCRIPTION,
     },
     AppEntry {
-        id:          data::xq::Xq::ID,
-        url:         data::xq::Xq::URL,
+        id:          Xq::ID,
+        url:         Xq::URL,
         category:    "data",
-        description: data::xq::Xq::DESCRIPTION,
+        description: Xq::DESCRIPTION,
     },
     AppEntry {
-        id:          files::yazi::Yazi::ID,
-        url:         files::yazi::Yazi::URL,
+        id:          Yazi::ID,
+        url:         Yazi::URL,
         category:    "files",
-        description: files::yazi::Yazi::DESCRIPTION,
+        description: Yazi::DESCRIPTION,
     },
     AppEntry {
-        id:          data::yq::Yq::ID,
-        url:         data::yq::Yq::URL,
+        id:          Yq::ID,
+        url:         Yq::URL,
         category:    "data",
-        description: data::yq::Yq::DESCRIPTION,
+        description: Yq::DESCRIPTION,
     },
     AppEntry {
-        id:          shell::zoxide::Zoxide::ID,
-        url:         shell::zoxide::Zoxide::URL,
+        id:          Zoxide::ID,
+        url:         Zoxide::URL,
         category:    "shell",
-        description: shell::zoxide::Zoxide::DESCRIPTION,
+        description: Zoxide::DESCRIPTION,
     },
 ];
 
@@ -386,69 +398,59 @@ pub fn create_app(
     use std::sync::Arc;
     let client = Arc::new(GithubClient::new(gh_token, offline));
     match id {
-        dev_envs::aqua::Aqua::ID => Some(Box::new(dev_envs::aqua::Aqua::new(client))),
-        dev_tools::ast_grep::AstGrep::ID => {
-            Some(Box::new(dev_tools::ast_grep::AstGrep::new(client)))
-        }
-        shell::atuin::Atuin::ID => Some(Box::new(shell::atuin::Atuin::new(client))),
-        files::bat::Bat::ID => Some(Box::new(files::bat::Bat::new(client))),
-        http::caddy::Caddy::ID => Some(Box::new(http::caddy::Caddy::new(client))),
-        shell::carapace::Carapace::ID => Some(Box::new(shell::carapace::Carapace::new(client))),
-        chezmoi::Chezmoi::ID => Some(Box::new(chezmoi::Chezmoi::new(client))),
-        containers::d4s::D4S::ID => Some(Box::new(containers::d4s::D4S::new(client))),
-        data::dasel::Dasel::ID => Some(Box::new(data::dasel::Dasel::new(client))),
-        git::delta::Delta::ID => Some(Box::new(git::delta::Delta::new(client))),
-        git::difftastic::Difftastic::ID => Some(Box::new(git::difftastic::Difftastic::new(client))),
-        containers::dock_mate::DockMate::ID => {
-            Some(Box::new(containers::dock_mate::DockMate::new(client)))
-        }
-        containers::dry::Dry::ID => Some(Box::new(containers::dry::Dry::new(client))),
-        files::dust::Dust::ID => Some(Box::new(files::dust::Dust::new(client))),
-        files::eza::Eza::ID => Some(Box::new(files::eza::Eza::new(client))),
-        files::fd_find::FdFind::ID => Some(Box::new(files::fd_find::FdFind::new(client))),
-        dev_envs::fnm::Fnm::ID => Some(Box::new(dev_envs::fnm::Fnm::new(client))),
-        data::fx::Fx::ID => Some(Box::new(data::fx::Fx::new(client))),
-        shell::fzf::Fzf::ID => Some(Box::new(shell::fzf::Fzf::new(client))),
-        git::gitleaks::Gitleaks::ID => Some(Box::new(git::gitleaks::Gitleaks::new(client))),
-        data::gojq::GoJq::ID => Some(Box::new(data::gojq::GoJq::new(client))),
-        logs::gonzo::Gonzo::ID => Some(Box::new(logs::gonzo::Gonzo::new(client))),
-        data::jid::Jid::ID => Some(Box::new(data::jid::Jid::new(client))),
-        data::jq::Jq::ID => Some(Box::new(data::jq::Jq::new(client))),
-        data::jqp::Jqp::ID => Some(Box::new(data::jqp::Jqp::new(client))),
-        logs::lazy_journal::LazyJournal::ID => {
-            Some(Box::new(logs::lazy_journal::LazyJournal::new(client)))
-        }
-        containers::lazydocker::LazyDocker::ID => {
-            Some(Box::new(containers::lazydocker::LazyDocker::new(client)))
-        }
-        git::lazygit::Lazygit::ID => Some(Box::new(git::lazygit::Lazygit::new(client))),
-        dev_tools::mdbook::Mdbook::ID => Some(Box::new(dev_tools::mdbook::Mdbook::new(client))),
-        git::mergiraf::Mergiraf::ID => {
-            Some(Box::new(git::mergiraf::Mergiraf::new(Arc::new(CodebergClient::new(
+        Aqua::ID => Some(Box::new(Aqua::new(client))),
+        AstGrep::ID => Some(Box::new(AstGrep::new(client))),
+        Atuin::ID => Some(Box::new(Atuin::new(client))),
+        Bat::ID => Some(Box::new(Bat::new(client))),
+        Caddy::ID => Some(Box::new(Caddy::new(client))),
+        Carapace::ID => Some(Box::new(Carapace::new(client))),
+        chezmoi::Chezmoi::ID => Some(Box::new(Chezmoi::new(client))),
+        D4S::ID => Some(Box::new(D4S::new(client))),
+        Dasel::ID => Some(Box::new(Dasel::new(client))),
+        Delta::ID => Some(Box::new(Delta::new(client))),
+        Difftastic::ID => Some(Box::new(Difftastic::new(client))),
+        DockMate::ID => Some(Box::new(DockMate::new(client))),
+        Dry::ID => Some(Box::new(Dry::new(client))),
+        Dust::ID => Some(Box::new(Dust::new(client))),
+        Eza::ID => Some(Box::new(Eza::new(client))),
+        FdFind::ID => Some(Box::new(FdFind::new(client))),
+        Fnm::ID => Some(Box::new(Fnm::new(client))),
+        Fx::ID => Some(Box::new(Fx::new(client))),
+        Fzf::ID => Some(Box::new(Fzf::new(client))),
+        Gitleaks::ID => Some(Box::new(Gitleaks::new(client))),
+        GoJq::ID => Some(Box::new(GoJq::new(client))),
+        Gonzo::ID => Some(Box::new(Gonzo::new(client))),
+        Jid::ID => Some(Box::new(Jid::new(client))),
+        Jq::ID => Some(Box::new(Jq::new(client))),
+        Jqp::ID => Some(Box::new(Jqp::new(client))),
+        LazyJournal::ID => Some(Box::new(LazyJournal::new(client))),
+        LazyDocker::ID => Some(Box::new(LazyDocker::new(client))),
+        Lazygit::ID => Some(Box::new(Lazygit::new(client))),
+        Mdbook::ID => Some(Box::new(Mdbook::new(client))),
+        Mergiraf::ID => {
+            Some(Box::new(Mergiraf::new(Arc::new(CodebergClient::new(
                 cb_token, offline,
             )))))
         }
-        dev_envs::mise::Mise::ID => Some(Box::new(dev_envs::mise::Mise::new(client))),
-        dev_tools::neovide::Neovide::ID => Some(Box::new(dev_tools::neovide::Neovide::new(client))),
-        rclone::Rclone::ID => Some(Box::new(rclone::Rclone::new(client))),
-        http::restish::Restish::ID => Some(Box::new(http::restish::Restish::new(client))),
-        files::ripgrep::Ripgrep::ID => Some(Box::new(files::ripgrep::Ripgrep::new(client))),
-        data::qsv::Qsv::ID => Some(Box::new(data::qsv::Qsv::new(client))),
-        data::qsv_all::QsvAll::ID => Some(Box::new(data::qsv_all::QsvAll::new(client))),
-        data::rsv::Rsv::ID => Some(Box::new(data::rsv::Rsv::new(client))),
-        dev_tools::rust_analyzer::RustAnalyzer::ID => {
-            Some(Box::new(dev_tools::rust_analyzer::RustAnalyzer::new(client)))
-        }
-        files::sd_edit::SdEdit::ID => Some(Box::new(files::sd_edit::SdEdit::new(client))),
-        shell::skim::Skim::ID => Some(Box::new(shell::skim::Skim::new(client))),
-        shell::starship::Starship::ID => Some(Box::new(shell::starship::Starship::new(client))),
-        dev_tools::stylua::Stylua::ID => Some(Box::new(dev_tools::stylua::Stylua::new(client))),
-        dev_envs::uv::Uv::ID => Some(Box::new(dev_envs::uv::Uv::new(client))),
-        http::xh::Xh::ID => Some(Box::new(http::xh::Xh::new(client))),
-        data::xq::Xq::ID => Some(Box::new(data::xq::Xq::new(client))),
-        files::yazi::Yazi::ID => Some(Box::new(files::yazi::Yazi::new(client))),
-        data::yq::Yq::ID => Some(Box::new(data::yq::Yq::new(client))),
-        shell::zoxide::Zoxide::ID => Some(Box::new(shell::zoxide::Zoxide::new(client))),
+        Mise::ID => Some(Box::new(Mise::new(client))),
+        Neovide::ID => Some(Box::new(Neovide::new(client))),
+        Rclone::ID => Some(Box::new(Rclone::new(client))),
+        Restish::ID => Some(Box::new(Restish::new(client))),
+        Ripgrep::ID => Some(Box::new(Ripgrep::new(client))),
+        Qsv::ID => Some(Box::new(Qsv::new(client))),
+        QsvAll::ID => Some(Box::new(QsvAll::new(client))),
+        Rsv::ID => Some(Box::new(Rsv::new(client))),
+        RustAnalyzer::ID => Some(Box::new(RustAnalyzer::new(client))),
+        SdEdit::ID => Some(Box::new(SdEdit::new(client))),
+        Skim::ID => Some(Box::new(Skim::new(client))),
+        Starship::ID => Some(Box::new(Starship::new(client))),
+        Stylua::ID => Some(Box::new(Stylua::new(client))),
+        Uv::ID => Some(Box::new(Uv::new(client))),
+        Xh::ID => Some(Box::new(Xh::new(client))),
+        Xq::ID => Some(Box::new(Xq::new(client))),
+        Yazi::ID => Some(Box::new(Yazi::new(client))),
+        Yq::ID => Some(Box::new(Yq::new(client))),
+        Zoxide::ID => Some(Box::new(Zoxide::new(client))),
         _ => None,
     }
 }

@@ -1,5 +1,11 @@
-pub mod ast_grep;
-pub mod mdbook;
-pub mod neovide;
-pub mod rust_analyzer;
-pub mod stylua;
+mod ast_grep;
+mod mdbook;
+mod neovide;
+mod rust_analyzer;
+mod stylua;
+
+pub use ast_grep::AstGrep;
+pub use mdbook::Mdbook;
+pub use neovide::Neovide;
+pub use rust_analyzer::RustAnalyzer;
+pub use stylua::Stylua;

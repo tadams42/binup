@@ -1,4 +1,9 @@
-pub mod d4s;
-pub mod dock_mate;
-pub mod dry;
-pub mod lazydocker;
+mod d4s;
+mod dock_mate;
+mod dry;
+mod lazydocker;
+
+pub use d4s::D4S;
+pub use dock_mate::DockMate;
+pub use dry::Dry;
+pub use lazydocker::LazyDocker;

@@ -82,9 +82,8 @@ fn parse_app_entries(manifest_dir: &Path, content: &str) -> Vec<(String, String,
     for line in content.lines() {
         let line = line.trim();
         if line.starts_with("AppEntry {") {
-            let id = extract_quoted_field(line, "id:").or_else(|| {
-                extract_path_field(line, "id:").and_then(|p| resolve_const(manifest_dir, &p, "ID"))
-            });
+            let id =
+                extract_path_field(line, "id:").and_then(|p| resolve_const(manifest_dir, &p, "ID"));
             let url = extract_path_field(line, "url:")
                 .and_then(|p| resolve_const(manifest_dir, &p, "URL"));
             let cat = extract_quoted_field(line, "category:");
@@ -99,10 +98,8 @@ fn parse_app_entries(manifest_dir: &Path, content: &str) -> Vec<(String, String,
             }
         } else if let Some((ref mut id, ref mut url, ref mut cat, ref mut desc)) = pending {
             if id.is_none() {
-                *id = extract_quoted_field(line, "id:").or_else(|| {
-                    extract_path_field(line, "id:")
-                        .and_then(|p| resolve_const(manifest_dir, &p, "ID"))
-                });
+                *id = extract_path_field(line, "id:")
+                    .and_then(|p| resolve_const(manifest_dir, &p, "ID"));
             }
             if url.is_none() {
                 *url = extract_path_field(line, "url:")
@@ -130,25 +127,36 @@ fn parse_app_entries(manifest_dir: &Path, content: &str) -> Vec<(String, String,
 }
 
 fn resolve_const(manifest_dir: &Path, path_expr: &str, const_name: &str) -> Option<String> {
-    // e.g. "files::ripgrep::Ripgrep::URL" -> read src/apps/files/ripgrep.rs, find pub const URL
     let suffix = format!("::{const_name}");
     let without_const = path_expr.trim_end_matches(suffix.as_str());
     let parts: Vec<&str> = without_const.split("::").collect();
-    if parts.len() < 2 {
-        return None;
+
+    // Full module path style: "files::ripgrep::Ripgrep::URL"
+    if parts.len() >= 2 {
+        let module_parts = &parts[..parts.len() - 1];
+        let file_path = manifest_dir
+            .join("src/apps")
+            .join(module_parts.join("/"))
+            .with_extension("rs");
+        if let Some(val) = fs::read_to_string(&file_path)
+            .ok()
+            .and_then(|c| read_const_from_content(&c, const_name))
+        {
+            return Some(val);
+        }
     }
-    let module_parts = &parts[..parts.len() - 1]; // drop the struct name
-    let file_path = manifest_dir
-        .join("src/apps")
-        .join(module_parts.join("/"))
-        .with_extension("rs");
-    let content = fs::read_to_string(&file_path).ok()?;
+
+    // Short name style: "Ripgrep::URL" — scan all app source files
+    let struct_name = parts.last()?;
+    find_const_in_apps(manifest_dir, struct_name, const_name)
+}
+
+fn read_const_from_content(content: &str, const_name: &str) -> Option<String> {
     let lines: Vec<&str> = content.lines().collect();
     let search = format!("pub const {const_name}:");
     for (i, line) in lines.iter().enumerate() {
         let trimmed = line.trim();
         if trimmed.starts_with(&search) {
-            // Value may be on this line or wrapped to the next by rustfmt
             if let Some(val) = extract_quoted_field(trimmed, "=") {
                 return Some(val);
             }
@@ -159,6 +167,35 @@ fn resolve_const(manifest_dir: &Path, path_expr: &str, const_name: &str) -> Opti
         }
     }
     None
+}
+
+fn find_const_in_apps(manifest_dir: &Path, struct_name: &str, const_name: &str) -> Option<String> {
+    walk_rs_files_for_const(&manifest_dir.join("src/apps"), struct_name, const_name)
+}
+
+fn walk_rs_files_for_const(dir: &Path, struct_name: &str, const_name: &str) -> Option<String> {
+    let entries = fs::read_dir(dir).ok()?;
+    for entry in entries.filter_map(|e| e.ok()) {
+        let path = entry.path();
+        if path.is_dir() {
+            if let Some(val) = walk_rs_files_for_const(&path, struct_name, const_name) {
+                return Some(val);
+            }
+        } else if path.extension().map_or(false, |e| e == "rs") {
+            if let Some(val) = try_const_from_file(&path, struct_name, const_name) {
+                return Some(val);
+            }
+        }
+    }
+    None
+}
+
+fn try_const_from_file(file_path: &Path, struct_name: &str, const_name: &str) -> Option<String> {
+    let content = fs::read_to_string(file_path).ok()?;
+    if !content.contains(&format!("pub struct {struct_name}")) {
+        return None;
+    }
+    read_const_from_content(&content, const_name)
 }
 
 fn extract_path_field(line: &str, field: &str) -> Option<String> {

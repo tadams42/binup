@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::apps::App;
 use crate::types::DownloadedAssets;
 use crate::version::AppVersion;
