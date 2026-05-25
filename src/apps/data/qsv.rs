@@ -4,8 +4,7 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::cache::GhRelease;
-use crate::github::GithubClient;
+use crate::clients::{GhRelease, GithubClient};
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 

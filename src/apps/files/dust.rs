@@ -73,7 +73,7 @@ use anyhow::{Result, anyhow};
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::github::GithubClient;
+use crate::clients::GithubClient;
 use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 

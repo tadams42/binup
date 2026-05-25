@@ -1,6 +1,20 @@
 use std::path::{Path, PathBuf};
 
-pub fn uninstall_app(prefix: &Path, exe_name: &str) -> Vec<PathBuf> {
+use anyhow::{Result, anyhow};
+
+use crate::apps::create_app;
+
+pub fn uninstall_apps(prefix: &Path, selected: &[String]) -> Result<Vec<PathBuf>> {
+    let mut removed = Vec::new();
+    for app_id in selected {
+        let app = create_app(app_id, None, None, false)
+            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+        removed.extend(uninstall_app(prefix, app.exe_name()));
+    }
+    Ok(removed)
+}
+
+fn uninstall_app(prefix: &Path, exe_name: &str) -> Vec<PathBuf> {
     let mut removed = Vec::new();
 
     try_remove(prefix.join("bin").join(exe_name), &mut removed);

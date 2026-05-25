@@ -1,9 +1,11 @@
-use anyhow::{Context, Result};
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+use anyhow::{Context, Result, anyhow};
+
+use crate::apps::create_app;
 use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage, Shell};
 
 const BIN_MODE: u32 = 0o755;
@@ -86,7 +88,7 @@ pub fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
 
 /// Generate zsh + bash + fish completions from a single binary with a
 /// uniform `[prefix_args..., shell_name]` invocation pattern.
-pub fn gen_completions_with_shell_arg(
+fn gen_completions_with_shell_arg(
     exe_name: &str, data: &[u8], prefix_args: &[&str],
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {
@@ -100,29 +102,6 @@ pub fn gen_completions_with_shell_arg(
             let mut args: Vec<&str> = prefix_args.to_vec();
             args.push(shell_name);
             let stdout = run_cmd(exe, &args)?;
-            completions.push(Completion {
-                shell:    *shell,
-                app_name: exe_name.to_string(),
-                data:     stdout,
-            });
-        }
-        Ok(completions)
-    })
-}
-
-/// Generate zsh + bash + fish completions where each shell gets its own flag
-/// e.g. ("--zsh", "--bash", "--fish").
-pub fn gen_completions_with_flags(
-    exe_name: &str, data: &[u8], zsh_flag: &str, bash_flag: &str, fish_flag: &str,
-) -> Result<Vec<Completion>> {
-    with_temp_exe(exe_name, data, |exe| {
-        let mut completions = Vec::new();
-        for (shell, flag) in &[
-            (Shell::Zsh, zsh_flag),
-            (Shell::Bash, bash_flag),
-            (Shell::Fish, fish_flag),
-        ] {
-            let stdout = run_cmd(exe, &[flag])?;
             completions.push(Completion {
                 shell:    *shell,
                 app_name: exe_name.to_string(),
@@ -160,4 +139,30 @@ pub fn gen_completions_shell_flag(
         }
         Ok(completions)
     })
+}
+
+/// Create each app from `selected` and call it's installer
+/// - installer might need to download the app, so it may need `gh_token` and/or `cb_token`
+/// - if `offline` is true, installer will not try to download anything but will work with cached
+///   data only
+pub fn install_apps(
+    prefix: &Path, selected: &[String], gh_token: Option<String>, cb_token: Option<String>,
+    offline: bool,
+) -> Result<Vec<PathBuf>> {
+    let mut installed = Vec::new();
+    for app_id in selected {
+        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), offline)
+            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+        match app.install(prefix) {
+            Ok(paths) => installed.extend(paths),
+            Err(e) => {
+                if offline {
+                    log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
+                } else {
+                    log::error!("app={} msg=Install failed: {:#}", app_id, e);
+                }
+            }
+        }
+    }
+    Ok(installed)
 }

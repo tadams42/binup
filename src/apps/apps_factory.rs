@@ -1,0 +1,77 @@
+use std::sync::Arc;
+
+use crate::clients::{CodebergClient, GithubClient};
+
+use super::App;
+use super::containers::{D4S, DockMate, Dry, LazyDocker};
+use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
+use super::dev_envs::{Aqua, Fnm, Mise, Uv};
+use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Stylua};
+use super::files::{Bat, Dust, Eza, FdFind, Ripgrep, SdEdit, Yazi};
+use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
+use super::http::{Caddy, Restish, Xh};
+use super::logs::{Gonzo, LazyJournal};
+use super::other::{Chezmoi, Rclone};
+use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
+
+pub fn create_app(
+    id: &str, gh_token: Option<String>, cb_token: Option<String>, offline: bool,
+) -> Option<Box<dyn App>> {
+    let client = Arc::new(GithubClient::new(gh_token, offline));
+    match id {
+        Aqua::ID => Some(Box::new(Aqua::new(client))),
+        AstGrep::ID => Some(Box::new(AstGrep::new(client))),
+        Atuin::ID => Some(Box::new(Atuin::new(client))),
+        Bat::ID => Some(Box::new(Bat::new(client))),
+        Caddy::ID => Some(Box::new(Caddy::new(client))),
+        Carapace::ID => Some(Box::new(Carapace::new(client))),
+        Chezmoi::ID => Some(Box::new(Chezmoi::new(client))),
+        D4S::ID => Some(Box::new(D4S::new(client))),
+        Dasel::ID => Some(Box::new(Dasel::new(client))),
+        Delta::ID => Some(Box::new(Delta::new(client))),
+        Difftastic::ID => Some(Box::new(Difftastic::new(client))),
+        DockMate::ID => Some(Box::new(DockMate::new(client))),
+        Dry::ID => Some(Box::new(Dry::new(client))),
+        Dust::ID => Some(Box::new(Dust::new(client))),
+        Eza::ID => Some(Box::new(Eza::new(client))),
+        FdFind::ID => Some(Box::new(FdFind::new(client))),
+        Fnm::ID => Some(Box::new(Fnm::new(client))),
+        Fx::ID => Some(Box::new(Fx::new(client))),
+        Fzf::ID => Some(Box::new(Fzf::new(client))),
+        Gitleaks::ID => Some(Box::new(Gitleaks::new(client))),
+        GoJq::ID => Some(Box::new(GoJq::new(client))),
+        Gonzo::ID => Some(Box::new(Gonzo::new(client))),
+        Jid::ID => Some(Box::new(Jid::new(client))),
+        Jq::ID => Some(Box::new(Jq::new(client))),
+        Jqp::ID => Some(Box::new(Jqp::new(client))),
+        LazyJournal::ID => Some(Box::new(LazyJournal::new(client))),
+        LazyDocker::ID => Some(Box::new(LazyDocker::new(client))),
+        Lazygit::ID => Some(Box::new(Lazygit::new(client))),
+        Mdbook::ID => Some(Box::new(Mdbook::new(client))),
+        Mergiraf::ID => {
+            Some(Box::new(Mergiraf::new(Arc::new(CodebergClient::new(
+                cb_token, offline,
+            )))))
+        }
+        Mise::ID => Some(Box::new(Mise::new(client))),
+        Neovide::ID => Some(Box::new(Neovide::new(client))),
+        Rclone::ID => Some(Box::new(Rclone::new(client))),
+        Restish::ID => Some(Box::new(Restish::new(client))),
+        Ripgrep::ID => Some(Box::new(Ripgrep::new(client))),
+        Qsv::ID => Some(Box::new(Qsv::new(client))),
+        QsvAll::ID => Some(Box::new(QsvAll::new(client))),
+        Rsv::ID => Some(Box::new(Rsv::new(client))),
+        RustAnalyzer::ID => Some(Box::new(RustAnalyzer::new(client))),
+        SdEdit::ID => Some(Box::new(SdEdit::new(client))),
+        Skim::ID => Some(Box::new(Skim::new(client))),
+        Starship::ID => Some(Box::new(Starship::new(client))),
+        Stylua::ID => Some(Box::new(Stylua::new(client))),
+        Uv::ID => Some(Box::new(Uv::new(client))),
+        Xh::ID => Some(Box::new(Xh::new(client))),
+        Xq::ID => Some(Box::new(Xq::new(client))),
+        Yazi::ID => Some(Box::new(Yazi::new(client))),
+        Yq::ID => Some(Box::new(Yq::new(client))),
+        Zoxide::ID => Some(Box::new(Zoxide::new(client))),
+        _ => None,
+    }
+}

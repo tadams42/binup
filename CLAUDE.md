@@ -22,15 +22,14 @@ Use `--prefix /tmp/try-relget/` to avoid needing `sudo` during local testing.
 
 ```
 src/
-  main.rs          # entry point: env_logger init, dispatches to lib functions
-  cli.rs           # clap CLI structs: Cli, Commands (ListAppsIds, Completions, Uninstall, Reinstall)
-  lib.rs           # public API: install_apps(), uninstall_apps(), select_apps(),
-                   #   resolve_github_token(), resolve_codeberg_token(),
-                   #   known_apps_identifiers(), MINIMAL_SET
+  main.rs           # entry point: env_logger init, dispatches to lib functions
+  lib.rs            # public API
   apps/
-    mod.rs         # App trait + ALL_APP_ENTRIES static slice + all_app_entries() + create_app()
-    chezmoi.rs     # top-level app file (not categorized into a subdir)
-    rclone.rs      # top-level app file
+    app_trait.rs    # Trait for all apps that can be downloaded and installed by `relget`
+    app_factory.rs  # App implementations are kept private to `apps`. Public API exposes
+                    # `str` identifiers through which `App` instances can be instantiated
+    app_registry.rs # static data containing all implemented apps and thin wrappers
+                    # for accessing it
     containers/    # d4s, dock_mate, dry, lazydocker
     data/          # dasel, fx, gojq, jid, jq, jqp, qsv, qsv_all, rsv, xq, yq
     dev_envs/      # aqua, fnm, go, mise, uv
@@ -40,9 +39,12 @@ src/
     http/          # caddy, restish, xh
     logs/          # gonzo, lazy_journal
     shell/         # atuin, carapace, fzf, skim, starship, zoxide
-  github.rs        # GithubClient with singleton Lazy<Mutex<GhCache>>
-  codeberg.rs      # CodebergClient with singleton Lazy<Mutex<GhCache>>
-  cache.rs         # GhCache: memory HashMap + disk under ~/.cache/relget/
+    other/         # rclone, chezmoi
+  cli/             # clap CLI structs: Cli, Commands and functions that implement them
+  clients/         # GitHub and Codeberg clients, caching
+    github.rs      # GithubClient with singleton Lazy<Mutex<GhCache>>
+    codeberg.rs    # CodebergClient with singleton Lazy<Mutex<GhCache>>
+    cache.rs       # GhCache: memory HashMap + disk under ~/.cache/relget/
   archive.rs       # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
   installer.rs     # install_assets(), with_temp_exe(), run_cmd(), gen_completions_*()
   uninstaller.rs   # uninstall_app(): removes binary, completions, man pages
@@ -53,64 +55,13 @@ src/
 ## Adding a new GitHub app
 
 1. Create `src/apps/<category>/myapp.rs` implementing the `App` trait:
-
-```rust
-use std::sync::Arc;
-use crate::apps::App;
-use crate::github::GithubClient;
-use crate::types::{AppBinary, DownloadedAssets};
-use crate::version::AppVersion;
-use anyhow::{Result, anyhow};
-
-pub struct MyApp { client: Arc<GithubClient> }
-
-impl MyApp {
-    pub const URL: &'static str = "https://github.com/owner/repo";
-    pub const DESCRIPTION: &'static str = "Short description of the tool";
-    const OWNER: &'static str = "owner";
-    const REPO: &'static str = "repo";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
-}
-
-impl App for MyApp {
-    fn exe_name(&self) -> &str { "myapp" }
-
-    fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
-    }
-
-    fn download(&self) -> Result<DownloadedAssets> {
-        let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release.asset_names().into_iter()
-            .find(|a| a.contains("x86_64") && a.contains("linux") && a.ends_with(".tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find asset"))?;
-        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
-        // extract binary from archive, optionally generate completions
-        Ok(DownloadedAssets { binary: Some(AppBinary::new("myapp", data)), ..Default::default() })
-    }
-}
-```
-
-2. Register in `src/apps/<category>/mod.rs`: add `pub mod myapp;`
-
-3. Register in `src/apps/mod.rs`:
-   - Add `AppEntry { id: "myapp", url: myapp::MyApp::URL, category: "<category>", description: myapp::MyApp::DESCRIPTION }` to `ALL_APP_ENTRIES`
-   - Add `"myapp" => Some(Box::new(myapp::MyApp::new(client)))` to `create_app()`
+2. Register in `src/apps/<category>/mod.rs`: add `mod myapp;` and `pub use myapp::MyApp;`
+3. Register in `src/apps/apps_registry.rs` creating new `AppEntry` in `ALL_APP_ENTRIES`
+4. Update `create_app()` in `src/apps/apps_factory.rs`, add `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`
 
 ## Adding a new Codeberg app
 
 Same as above but use `CodebergClient` instead of `GithubClient`:
-
-```rust
-use crate::codeberg::CodebergClient;
-pub struct MyApp { client: Arc<CodebergClient> }
-impl MyApp { pub fn new(client: Arc<CodebergClient>) -> Self { Self { client } } }
-```
-
-In `create_app()`:
-```rust
-"myapp" => Some(Box::new(myapp::MyApp::new(Arc::new(CodebergClient::new(cb_token, offline))))),
-```
 
 ## App trait defaults
 
@@ -126,9 +77,6 @@ gen_completions_subcommand("myapp", &data, "completions")
 
 // Generate completions: `<exe> <subcommand> <flag> <shell>` (e.g. "atuin gen-completions --shell zsh"):
 gen_completions_shell_flag("myapp", &data, "gen-completions", "--shell")
-
-// Generate completions with arbitrary per-shell flags (e.g. "--zsh", "--bash", "--fish"):
-gen_completions_with_flags("myapp", &data, "--zsh", "--bash", "--fish")
 
 // Generic: `<exe> [prefix_args...] <shell>` — basis for the helpers above:
 gen_completions_with_shell_arg("myapp", &data, &["subcommand"])

@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::codeberg::CodebergClient;
+use crate::clients::CodebergClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 

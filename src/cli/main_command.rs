@@ -1,6 +1,41 @@
-use clap::{Parser, Subcommand};
-use clap_complete::Shell;
 use std::path::PathBuf;
+
+use anyhow::Result;
+use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
+use clap_complete::{Shell, generate};
+
+use crate::apps::minimal_set_identifiers;
+
+use super::sub_commands::{
+    install_apps_command, list_apps_ids_command, reinstall_apps_command, uninstall_command,
+};
+
+const DEFAULT_PREFIX: &str = "/usr/local";
+
+pub fn create_cli() -> Result<Cli> {
+    let minimal_set_help = format!(
+        "Install a hand-picked minimal set of apps (overrides --apps): {}",
+        minimal_set_identifiers().join(", ")
+    );
+    let cmd = Cli::command().mut_arg("minimal_set", |a| a.help(minimal_set_help));
+    let cli = Cli::from_arg_matches(&cmd.get_matches())?;
+
+    Ok(cli)
+}
+
+pub fn execute_cli(cli: &Cli) -> Result<()> {
+    match cli.command {
+        Some(Commands::ListAppsIds) => list_apps_ids_command(),
+        Some(Commands::Completions { shell }) => {
+            generate(shell, &mut Cli::command(), "relget", &mut std::io::stdout())
+        }
+        Some(Commands::Uninstall) => uninstall_command(cli)?,
+        Some(Commands::Reinstall) => reinstall_apps_command(cli)?,
+        None => install_apps_command(cli)?,
+    }
+
+    Ok(())
+}
 
 #[derive(Parser)]
 #[command(name = "relget")]
@@ -11,7 +46,7 @@ pub struct Cli {
     pub command: Option<Commands>,
 
     /// Install prefix (e.g. /usr/local or ~/.local)
-    #[arg(short = 'p', long, default_value = "/usr/local", global = true)]
+    #[arg(short = 'p', long, default_value = DEFAULT_PREFIX, global = true)]
     pub prefix: PathBuf,
 
     /// App(s) to install; comma-separated. Defaults to all apps.

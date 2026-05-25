@@ -34,9 +34,9 @@ from your shell, depends on your `$PATH`. In most modern distros, stuff from
 - `relget` is **NOT** a fully blown package manager
 - there is no way to select the version of installed binary - `relget` **ALWAYS**
   installs latest version of each supported app:
-  - which may not work on your current system (usually if your system is too old)
-  - or that app's released binary is broken
-  - or the binary works but the latest version that `relget` had just installed, is no
+  - ⚠️ which may not work on your current system (usually if your system is too old)
+  - ⚠️ or that app's released binary is broken
+  - ⚠️ or the binary works but the latest version that `relget` had just installed, is no
     longer compatible with whatever you have on your system that depends on it; and
     `relget` had just this moment installed it to location that makes sure this broken
     version is called by everything 😎
@@ -64,8 +64,8 @@ relget --prefix ~/.local --apps rg,bat,fzf
 relget --prefix ~/.local --minimal-set
 ```
 
-`GitHub` applies rate limiting to unauthenticated API requests. Providing a token avoids
-hitting those limits.
+`GitHub` applies rate limiting to unauthenticated API requests. Providing your own token
+avoids hitting those limits.
 
 ```sh
 # prompt for GitHub token interactively

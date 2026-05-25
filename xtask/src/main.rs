@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use relget::apps::all_app_entries;
+use relget::all_app_entries;
 
 fn main() {
     let task = std::env::args().nth(1);
@@ -15,7 +15,10 @@ fn main() {
 }
 
 fn project_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap().to_path_buf()
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .to_path_buf()
 }
 
 fn category_display_name(category: &str) -> &str {
@@ -66,8 +69,7 @@ fn update_readme() {
         .position(|l| l.starts_with("[^1]: "))
         .expect("'[^1]:' marker not found in README.md");
 
-    let mut new_lines: Vec<String> =
-        lines[..=idx_start].iter().map(|l| l.to_string()).collect();
+    let mut new_lines: Vec<String> = lines[..=idx_start].iter().map(|l| l.to_string()).collect();
     new_lines.push(String::new());
     new_lines.extend(app_lines);
     new_lines.push(String::new());
