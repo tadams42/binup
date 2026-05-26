@@ -148,11 +148,11 @@ pub fn gen_completions_shell_flag(
 ///   data only
 pub fn install_apps(
     prefix: &Path, selected: &[String], gh_token: Option<String>, cb_token: Option<String>,
-    offline: bool,
+    gl_token: Option<String>, offline: bool,
 ) -> Result<Vec<PathBuf>> {
     let mut installed = Vec::new();
     for app_id in selected {
-        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), offline)
+        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
             .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         match app.install(prefix) {
             Ok(paths) => installed.extend(paths),

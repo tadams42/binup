@@ -69,6 +69,11 @@ pub struct Cli {
     #[arg(long, default_value = "load", value_parser = ["prompt", "load"], global = true)]
     pub cb_token_source: String,
 
+    /// GitLab token source: `prompt` to enter interactively, `load` to read from
+    /// RELGET_GLB_TOKEN env var or ~/.config/relget.toml (gitlab_token key)
+    #[arg(long, default_value = "load", value_parser = ["prompt", "load"], global = true)]
+    pub gl_token_source: String,
+
     /// Install a hand-picked minimal set of apps (overrides --apps)
     #[arg(long, default_value_t = false, global = true)]
     pub minimal_set: bool,
@@ -103,7 +108,7 @@ pub enum Commands {
     ///   - Man pages with a separator other than `-` (e.g. `eza_colors.5`) are not matched and will
     ///     not be removed.
     ///
-    /// Token flags (--gh-token-source, --cb-token-source) are accepted but
+    /// Token flags (--gh-token-source, --cb-token-source, --gl-token-source) are accepted but
     /// ignored for this command.
     #[command(verbatim_doc_comment)]
     Uninstall,

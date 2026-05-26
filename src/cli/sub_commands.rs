@@ -4,7 +4,10 @@ use crate::apps::all_apps_identifiers;
 use crate::installer::install_apps;
 use crate::uninstaller::uninstall_apps;
 
-use super::helpers::{load_or_prompt_codeberg_token, load_or_prompt_github_token, select_apps};
+use super::helpers::{
+    load_or_prompt_codeberg_token, load_or_prompt_github_token, load_or_prompt_gitlab_token,
+    select_apps,
+};
 use super::main_command::Cli;
 
 pub fn list_apps_ids_command() {
@@ -15,16 +18,17 @@ pub fn list_apps_ids_command() {
 
 pub fn install_apps_command(cli: &Cli) -> Result<()> {
     log::info!("Installing into: {:?}", cli.prefix);
-    let (gh_token, cb_token) = if cli.offline {
-        (None, None)
+    let (gh_token, cb_token, gl_token) = if cli.offline {
+        (None, None, None)
     } else {
         (
             load_or_prompt_github_token(&cli.gh_token_source)?,
             load_or_prompt_codeberg_token(&cli.cb_token_source)?,
+            load_or_prompt_gitlab_token(&cli.gl_token_source)?,
         )
     };
     let selected = select_apps(&cli.apps, cli.minimal_set)?;
-    let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, cli.offline)?;
+    let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, gl_token, cli.offline)?;
     if !installed.is_empty() {
         println!("Installed files:");
         for path in installed {
@@ -63,15 +67,16 @@ pub fn reinstall_apps_command(cli: &Cli) -> Result<()> {
         }
     }
     log::info!("Reinstalling into: {:?}", cli.prefix);
-    let (gh_token, cb_token) = if cli.offline {
-        (None, None)
+    let (gh_token, cb_token, gl_token) = if cli.offline {
+        (None, None, None)
     } else {
         (
             load_or_prompt_github_token(&cli.gh_token_source)?,
             load_or_prompt_codeberg_token(&cli.cb_token_source)?,
+            load_or_prompt_gitlab_token(&cli.gl_token_source)?,
         )
     };
-    let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, cli.offline)?;
+    let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, gl_token, cli.offline)?;
     if !installed.is_empty() {
         println!("Installed files:");
         for path in installed {

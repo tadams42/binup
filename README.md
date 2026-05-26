@@ -64,30 +64,41 @@ relget --prefix ~/.local --apps rg,bat,fzf
 relget --prefix ~/.local --minimal-set
 ```
 
-`GitHub` applies rate limiting to unauthenticated API requests. Providing your own token
-avoids hitting those limits. Create `~/.config/relget.toml`:
+Services `relget` uses (`GitHub`, `Codeberg`, `GitLab`, ...) apply rate limiting to
+their APIs. To avoid hitting these rate limits you should provide `PAT` (Personal Access
+Token) for each of them. These tokens can be read
 
-```toml
-github_token = "ghp_..."
-codeberg_token = "..."   # optional, only needed for Codeberg apps
-```
+- from config file `~/.config/relget.toml`:
 
-Or export environment variables (these take precedence over the config file):
+  ```toml
+  github_token = "ghp_..."
+  codeberg_token = "..."     # optional, only needed for Codeberg apps
+  gitlab_token = "glpat-..." # optional, only needed for GitLab apps
+  ```
 
-```sh
-export RELGET_GHB_TOKEN="ghp_..."
-export RELGET_CDB_TOKEN="..."
-```
+- from environment variables `RELGET_GHB_TOKEN`, `RELGET_CDB_TOKEN`, and
+  `RELGET_GLB_TOKEN`:
 
-You can also supply a token interactively:
+  ```sh
+  export RELGET_GHB_TOKEN="ghp_..."
+  export RELGET_CDB_TOKEN="..."
+  export RELGET_GLB_TOKEN="..."
+  ```
 
-```sh
-# prompt for GitHub token
-relget --gh-token-source prompt
+  Note that values from env variables have higher precedence.
 
-# prompt for Codeberg token
-relget --cb-token-source prompt
-```
+- or from `relget`'s interactive prompt
+
+  ```sh
+  # prompt for GitHub token
+  relget --gh-token-source prompt
+
+  # prompt for Codeberg token
+  relget --cb-token-source prompt
+
+  # prompt for GitLab token
+  relget --gl-token-source prompt
+  ```
 
 ## Uninstall
 
@@ -137,6 +148,7 @@ for the full list of caveats.
 
 ### databases
 
+- [pdot](https://gitlab.com/dmfay/pdot) — PostgreSQL schema visualizer using Graphviz/Mermaid
 - [pgplan](https://github.com/JacobArthurs/pgplan) — CLI tool for visualizing and analyzing PostgreSQL query plans
 - [sabiql](https://github.com/riii111/sabiql) — TUI client for PostgreSQL databases
 - [squix](https://github.com/eduardofuncao/squix) — Interactive TUI for exploring and querying SQL databases

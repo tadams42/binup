@@ -5,6 +5,7 @@ use serde::Deserialize;
 struct RelgetConfig {
     github_token:   Option<String>,
     codeberg_token: Option<String>,
+    gitlab_token:   Option<String>,
 }
 
 fn load_config() -> Result<RelgetConfig> {
@@ -31,4 +32,13 @@ pub fn load_codeberg_token() -> Result<Option<String>> {
         }
     }
     Ok(load_config()?.codeberg_token)
+}
+
+pub fn load_gitlab_token() -> Result<Option<String>> {
+    if let Ok(t) = std::env::var("RELGET_GLB_TOKEN") {
+        if !t.is_empty() {
+            return Ok(Some(t));
+        }
+    }
+    Ok(load_config()?.gitlab_token)
 }

@@ -1,8 +1,10 @@
+mod pdot;
 mod pgplan;
 mod sabiql;
 mod squix;
 mod usql;
 
+pub use pdot::Pdot;
 pub use pgplan::Pgplan;
 pub use sabiql::Sabiql;
 pub use squix::Squix;

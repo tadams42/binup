@@ -41,9 +41,10 @@ src/
     shell/         # atuin, carapace, fzf, skim, starship, zoxide
     other/         # rclone, chezmoi
   cli/             # clap CLI structs: Cli, Commands and functions that implement them
-  clients/         # GitHub and Codeberg clients, caching
+  clients/         # GitHub, Codeberg, and GitLab clients, caching
     github.rs      # GithubClient with singleton Lazy<Mutex<GhCache>>
     codeberg.rs    # CodebergClient with singleton Lazy<Mutex<GhCache>>
+    gitlab.rs      # GitlabClient with singleton Lazy<Mutex<GhCache>>
     cache.rs       # GhCache: memory HashMap + disk under ~/.cache/relget/
   archive.rs       # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
   installer.rs     # install_assets(), with_temp_exe(), run_cmd(), gen_completions_*()
@@ -63,6 +64,10 @@ src/
 ## Adding a new Codeberg app
 
 Same as above but use `CodebergClient` instead of `GithubClient`:
+
+## Adding a new GitLab app
+
+Same as above but use `GitlabClient` instead of `GithubClient`. Note that GitLab release assets are stored under `assets.links[].{id, name, direct_asset_url}` in the API response; `GitlabClient` normalizes this to the same shape as GitHub/Codeberg before storing in `GhRelease`, so the same `release.asset_names()` / `release.asset_download_url()` helpers work.
 
 ## App trait defaults
 
@@ -94,23 +99,28 @@ Config file `~/.config/relget.toml` (optional):
 ```toml
 github_token = "ghp_..."
 codeberg_token = "..."
+gitlab_token = "..."
 ```
 
 Env vars override the config file (higher precedence):
 - `RELGET_GHB_TOKEN` — GitHub token
 - `RELGET_CDB_TOKEN` — Codeberg token
+- `RELGET_GLB_TOKEN` — GitLab token
 
 CLI flags:
 - `--gh-token-source prompt`: prompts on stdin (masked)
 - `--gh-token-source load` (default): reads `RELGET_GHB_TOKEN` env, then `~/.config/relget.toml`
 - `--cb-token-source prompt`: prompts on stdin (masked)
 - `--cb-token-source load` (default): reads `RELGET_CDB_TOKEN` env, then `~/.config/relget.toml`
+- `--gl-token-source prompt`: prompts on stdin (masked)
+- `--gl-token-source load` (default): reads `RELGET_GLB_TOKEN` env, then `~/.config/relget.toml`
 
 ## Cache
 
-`GhCache` is reused for both GitHub and Codeberg:
+`GhCache` is reused for GitHub, Codeberg, and GitLab:
 - GitHub: `~/.cache/relget/{owner}/{repo}/release.json` and `asset.{id}`
 - Codeberg: `~/.cache/relget/codeberg/{owner}/{repo}/release.json` and `asset.{id}`
+- GitLab: `~/.cache/relget/gitlab/{owner}/{repo}/release.json` and `asset.{id}`
 - Release cache TTL: 1 day
 - Asset cache: permanent (keyed by asset ID, which changes when a new release is published)
 

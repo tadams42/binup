@@ -1,11 +1,11 @@
 use std::sync::Arc;
 
-use crate::clients::{CodebergClient, GithubClient};
+use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 
 use super::App;
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
-use super::databases::{Pgplan, Sabiql, Squix, Usql};
+use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
@@ -17,7 +17,8 @@ use super::other::{Chezmoi, Rclone, Tlrc};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 
 pub fn create_app(
-    id: &str, gh_token: Option<String>, cb_token: Option<String>, offline: bool,
+    id: &str, gh_token: Option<String>, cb_token: Option<String>, gl_token: Option<String>,
+    offline: bool,
 ) -> Option<Box<dyn App>> {
     let client = Arc::new(GithubClient::new(gh_token, offline));
     match id {
@@ -55,6 +56,11 @@ pub fn create_app(
         Mergiraf::ID => {
             Some(Box::new(Mergiraf::new(Arc::new(CodebergClient::new(
                 cb_token, offline,
+            )))))
+        }
+        Pdot::ID => {
+            Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(
+                gl_token, offline,
             )))))
         }
         Mise::ID => Some(Box::new(Mise::new(client))),

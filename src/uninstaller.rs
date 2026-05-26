@@ -7,7 +7,7 @@ use crate::apps::create_app;
 pub fn uninstall_apps(prefix: &Path, selected: &[String]) -> Result<Vec<PathBuf>> {
     let mut removed = Vec::new();
     for app_id in selected {
-        let app = create_app(app_id, None, None, false)
+        let app = create_app(app_id, None, None, None, false)
             .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         removed.extend(uninstall_app(prefix, app.exe_name()));
     }
