@@ -7,7 +7,7 @@ use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal};
 use super::music::Spotatui;
-use super::other::{Chezmoi, Rclone};
+use super::other::{Chezmoi, Rclone, Tlrc};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 
 #[rustfmt::skip]
@@ -318,6 +318,12 @@ static ALL_APP_ENTRIES: &[AppEntry] = &[
         url:         Stylua::URL,
         category:    "dev_tools",
         description: Stylua::DESCRIPTION,
+    },
+    AppEntry {
+        id:          Tlrc::ID,
+        url:         Tlrc::URL,
+        category:    "other",
+        description: Tlrc::DESCRIPTION,
     },
     AppEntry {
         id:          Trash::ID,

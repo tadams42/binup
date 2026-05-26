@@ -190,6 +190,7 @@ for the full list of caveats.
 
 - [chezmoi](https://github.com/twpayne/chezmoi) — Dotfiles manager across multiple machines
 - [rclone](https://github.com/rclone/rclone) — rsync for cloud storage (S3, GDrive, Dropbox, and more)
+- [tlrc](https://github.com/tldr-pages/tlrc) — Official tldr-pages client written in Rust
 
 ### Shell
 

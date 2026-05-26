@@ -12,7 +12,7 @@ use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal};
 use super::music::Spotatui;
-use super::other::{Chezmoi, Rclone};
+use super::other::{Chezmoi, Rclone, Tlrc};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 
 pub fn create_app(
@@ -70,6 +70,7 @@ pub fn create_app(
         Spotatui::ID => Some(Box::new(Spotatui::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),
         Stylua::ID => Some(Box::new(Stylua::new(client))),
+        Tlrc::ID => Some(Box::new(Tlrc::new(client))),
         Trash::ID => Some(Box::new(Trash::new(client))),
         Uv::ID => Some(Box::new(Uv::new(client))),
         Xh::ID => Some(Box::new(Xh::new(client))),
