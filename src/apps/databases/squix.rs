@@ -1,0 +1,49 @@
+use anyhow::{Result, anyhow};
+use std::sync::Arc;
+
+use crate::apps::App;
+use crate::clients::GithubClient;
+use crate::installer::gen_completions_subcommand;
+use crate::types::{AppBinary, DownloadedAssets};
+use crate::version::AppVersion;
+
+pub struct Squix {
+    client: Arc<GithubClient>,
+}
+
+impl Squix {
+    pub const ID: &'static str = "squix";
+    pub const DESCRIPTION: &'static str =
+        "Interactive TUI for exploring and querying SQL databases";
+    pub const URL: &'static str = "https://github.com/eduardofuncao/squix";
+    const OWNER: &'static str = "eduardofuncao";
+    const REPO: &'static str = "squix";
+    const EXE_NAME: &'static str = "squix";
+    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+}
+
+impl App for Squix {
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
+
+    fn released_version(&self) -> Result<AppVersion> {
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
+    }
+
+    fn download(&self) -> Result<DownloadedAssets> {
+        let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
+        let name = release
+            .asset_names()
+            .into_iter()
+            .find(|a| a.as_str() == "squix-linux-amd64")
+            .ok_or_else(|| anyhow!("Can't find squix linux amd64 asset"))?;
+        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
+        let completions = gen_completions_subcommand("squix", &asset.data, "completion")?;
+        Ok(DownloadedAssets {
+            binary: Some(AppBinary::new("squix", asset.data)),
+            completions,
+            ..Default::default()
+        })
+    }
+}

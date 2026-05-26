@@ -5,7 +5,7 @@ use crate::clients::{CodebergClient, GithubClient};
 use super::App;
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
-use super::databases::{Pgplan, Sabiql, Usql};
+use super::databases::{Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
@@ -72,6 +72,7 @@ pub fn create_app(
         SdEdit::ID => Some(Box::new(SdEdit::new(client))),
         Skim::ID => Some(Box::new(Skim::new(client))),
         Spotatui::ID => Some(Box::new(Spotatui::new(client))),
+        Squix::ID => Some(Box::new(Squix::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),
         Stylua::ID => Some(Box::new(Stylua::new(client))),
         Tlrc::ID => Some(Box::new(Tlrc::new(client))),
