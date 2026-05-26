@@ -87,12 +87,23 @@ with_temp_exe("myapp", &data, |path| { ... })
 
 ## Token handling
 
-- `--gh-token-source prompt`: prompts on stdin (masked)
-- `--gh-token-source load` (default): reads `GITHUB_API_TOKEN` env, then `~/.config/github/api_token`
-- `--cb-token-source prompt`: prompts on stdin (masked)
-- `--cb-token-source load` (default): reads `CODEBERG_API_TOKEN` env, then `~/.config/codeberg/api_token`
+Tokens are optional. Without them, `relget` works anonymously (subject to API rate limits).
 
-`CodebergClient::new(token, offline)` uses the provided token if `Some`, otherwise falls back to auto-loading from env/file.
+Config file `~/.config/relget.toml` (optional):
+```toml
+github_token = "ghp_..."
+codeberg_token = "..."
+```
+
+Env vars override the config file (higher precedence):
+- `RELGET_GHB_TOKEN` — GitHub token
+- `RELGET_CDB_TOKEN` — Codeberg token
+
+CLI flags:
+- `--gh-token-source prompt`: prompts on stdin (masked)
+- `--gh-token-source load` (default): reads `RELGET_GHB_TOKEN` env, then `~/.config/relget.toml`
+- `--cb-token-source prompt`: prompts on stdin (masked)
+- `--cb-token-source load` (default): reads `RELGET_CDB_TOKEN` env, then `~/.config/relget.toml`
 
 ## Cache
 

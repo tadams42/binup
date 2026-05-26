@@ -7,8 +7,6 @@ use super::cache::{GhCache, GhDownloadedAsset, GhRelease};
 static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new_with_prefix("codeberg")));
 
 const CB_API_URL: &str = "https://codeberg.org/api/v1/repos";
-const CB_TOKEN_ENV_VAR_NAME: &str = "CODEBERG_API_TOKEN";
-const CB_TOKEN_FILE_PATH: &str = ".config/codeberg/api_token";
 
 pub struct CodebergClient {
     pub token:   Option<String>,
@@ -16,25 +14,6 @@ pub struct CodebergClient {
 }
 
 impl CodebergClient {
-    pub fn load_token() -> Result<Option<String>> {
-        if let Ok(t) = std::env::var(CB_TOKEN_ENV_VAR_NAME) {
-            if !t.is_empty() {
-                return Ok(Some(t));
-            }
-        }
-
-        let config_path = dirs::home_dir()
-            .unwrap_or_default()
-            .join(CB_TOKEN_FILE_PATH);
-
-        if config_path.exists() {
-            let content = std::fs::read_to_string(&config_path)?;
-            let token = content.lines().last().unwrap_or("").trim().to_string();
-            return Ok(if token.is_empty() { None } else { Some(token) });
-        }
-        Ok(None)
-    }
-
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
 
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {

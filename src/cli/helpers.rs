@@ -1,7 +1,7 @@
 use anyhow::{Result, anyhow};
 
 use crate::apps::{all_apps_identifiers, minimal_set_identifiers};
-use crate::clients::{CodebergClient, GithubClient};
+use crate::config::{load_codeberg_token, load_github_token};
 
 pub fn load_or_prompt_github_token(source: &str) -> Result<Option<String>> {
     match source {
@@ -10,7 +10,7 @@ pub fn load_or_prompt_github_token(source: &str) -> Result<Option<String>> {
                 .unwrap_or_default();
             Ok(if token.is_empty() { None } else { Some(token) })
         }
-        "load" => GithubClient::load_token(),
+        "load" => load_github_token(),
         _ => Err(anyhow!("Unknown token source '{}'", source)),
     }
 }
@@ -22,7 +22,7 @@ pub fn load_or_prompt_codeberg_token(source: &str) -> Result<Option<String>> {
                 .unwrap_or_default();
             Ok(if token.is_empty() { None } else { Some(token) })
         }
-        "load" => CodebergClient::load_token(),
+        "load" => load_codeberg_token(),
         _ => Err(anyhow!("Unknown token source '{}'", source)),
     }
 }

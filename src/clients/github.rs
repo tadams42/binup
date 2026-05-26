@@ -7,8 +7,6 @@ use super::cache::{GhCache, GhDownloadedAsset, GhRelease};
 static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new()));
 
 const GH_API_URL: &str = "https://api.github.com/repos";
-const GH_TOKEN_ENV_VAR_NAME: &str = "GITHUB_API_TOKEN";
-const GH_TOKEN_FILE_PATH: &str = ".config/github/api_token";
 
 pub struct GithubClient {
     pub token:   Option<String>,
@@ -16,26 +14,6 @@ pub struct GithubClient {
 }
 
 impl GithubClient {
-    pub fn load_token() -> Result<Option<String>> {
-        if let Ok(t) = std::env::var(GH_TOKEN_ENV_VAR_NAME) {
-            if !t.is_empty() {
-                return Ok(Some(t));
-            }
-        }
-
-        let config_path = dirs::home_dir()
-            .unwrap_or_default()
-            .join(GH_TOKEN_FILE_PATH);
-
-        if config_path.exists() {
-            let content = std::fs::read_to_string(&config_path)?;
-            let token = content.lines().last().unwrap_or("").trim().to_string();
-            return Ok(if token.is_empty() { None } else { Some(token) });
-        }
-
-        Ok(None)
-    }
-
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
 
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {

@@ -65,19 +65,27 @@ relget --prefix ~/.local --minimal-set
 ```
 
 `GitHub` applies rate limiting to unauthenticated API requests. Providing your own token
-avoids hitting those limits.
+avoids hitting those limits. Create `~/.config/relget.toml`:
+
+```toml
+github_token = "ghp_..."
+codeberg_token = "..."   # optional, only needed for Codeberg apps
+```
+
+Or export environment variables (these take precedence over the config file):
 
 ```sh
-# prompt for GitHub token interactively
+export RELGET_GHB_TOKEN="ghp_..."
+export RELGET_CDB_TOKEN="..."
+```
+
+You can also supply a token interactively:
+
+```sh
+# prompt for GitHub token
 relget --gh-token-source prompt
 
-# load GitHub token from GITHUB_API_TOKEN env var or ~/.config/github/api_token
-relget --gh-token-source load
-
-# load Codeberg token from CODEBERG_API_TOKEN env var or ~/.config/codeberg/api_token
-relget --cb-token-source load
-
-# prompt for Codeberg token interactively
+# prompt for Codeberg token
 relget --cb-token-source prompt
 ```
 

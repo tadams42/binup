@@ -59,11 +59,13 @@ pub struct Cli {
     )]
     pub apps: Vec<String>,
 
-    /// Where to load GitHub API token from (prompt or load)
+    /// GitHub token source: `prompt` to enter interactively, `load` to read from
+    /// RELGET_GHB_TOKEN env var or ~/.config/relget.toml (github_token key)
     #[arg(long, default_value = "load", value_parser = ["prompt", "load"], global = true)]
     pub gh_token_source: String,
 
-    /// Where to load Codeberg API token from (prompt or load)
+    /// Codeberg token source: `prompt` to enter interactively, `load` to read from
+    /// RELGET_CDB_TOKEN env var or ~/.config/relget.toml (codeberg_token key)
     #[arg(long, default_value = "load", value_parser = ["prompt", "load"], global = true)]
     pub cb_token_source: String,
 

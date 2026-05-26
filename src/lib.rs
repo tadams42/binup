@@ -2,6 +2,7 @@ mod apps;
 mod archive;
 mod cli;
 mod clients;
+mod config;
 mod installer;
 mod types;
 mod uninstaller;
