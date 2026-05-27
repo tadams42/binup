@@ -55,7 +55,8 @@ pub struct Cli {
         long = "apps",
         value_name = "NAME[,NAME...]",
         value_delimiter = ',',
-        global = true
+        global = true,
+        conflicts_with_all = ["minimal_set", "configured_set"]
     )]
     pub apps: Vec<String>,
 
@@ -74,9 +75,13 @@ pub struct Cli {
     #[arg(long, default_value = "load", value_parser = ["prompt", "load"], global = true)]
     pub gl_token_source: String,
 
-    /// Install a hand-picked minimal set of apps (overrides --apps)
-    #[arg(long, default_value_t = false, global = true)]
+    /// Install a hand-picked minimal set of apps
+    #[arg(long, default_value_t = false, global = true, conflicts_with_all = ["apps", "configured_set"])]
     pub minimal_set: bool,
+
+    /// Load a named app set from the [sets] table in ~/.config/relget.toml
+    #[arg(long, value_name = "SET_NAME", global = true, conflicts_with_all = ["apps", "minimal_set"])]
+    pub configured_set: Option<String>,
 
     /// Use only cached data; never make network requests
     #[arg(long, default_value_t = false, global = true)]

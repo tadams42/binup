@@ -1,4 +1,6 @@
-use anyhow::Result;
+use std::collections::HashMap;
+
+use anyhow::{Result, anyhow};
 use serde::Deserialize;
 
 #[derive(Deserialize, Default)]
@@ -6,6 +8,8 @@ struct RelgetConfig {
     github_token:   Option<String>,
     codeberg_token: Option<String>,
     gitlab_token:   Option<String>,
+    #[serde(default)]
+    sets:           HashMap<String, Vec<String>>,
 }
 
 fn load_config() -> Result<RelgetConfig> {
@@ -41,4 +45,13 @@ pub fn load_gitlab_token() -> Result<Option<String>> {
         }
     }
     Ok(load_config()?.gitlab_token)
+}
+
+pub fn load_configured_set(name: &str) -> Result<Vec<String>> {
+    let config = load_config()?;
+    config
+        .sets
+        .get(name)
+        .cloned()
+        .ok_or_else(|| anyhow!("no configured set '{}' found in ~/.config/relget.toml under [sets]", name))
 }

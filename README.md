@@ -9,7 +9,7 @@ releases into `/usr/local`. Installs app itself, `man` pages and completion for 
 ```sh
 curl -fsSL https://github.com/tadams42/relget/releases/latest/download/relget-x86_64-linux.tar.gz | tar xz
 
-sudo ./relget --gh-token-source load --minimal-set
+sudo ./relget --gh-token-source prompt --minimal-set
 
 rm ./relget
 ```
@@ -36,16 +36,16 @@ from your shell, depends on your `$PATH`. In most modern distros, stuff from
   installs latest version of each supported app:
   - ⚠️ which may not work on your current system (usually if your system is too old)
   - ⚠️ or that app's released binary is broken
-  - ⚠️ or the binary works but the latest version that `relget` had just installed, is no
-    longer compatible with whatever you have on your system that depends on it; and
+  - ⚠️ or the binary works but the latest version that `relget` had just installed, is
+    no longer compatible with whatever you have on your system that depends on it; and
     `relget` had just this moment installed it to location that makes sure this broken
     version is called by everything 😎
   - or ...
 - `relget uninstall` is best-effort: it removes the primary binary, standard
-  completions, and man pages matched by name, but does not guarantee complete
-  removal (see `relget uninstall --help` for details)
-- `relget` works on and installs utilities for **Linux only**; you may be able to make it
-  work on some other systems, but it was never intended to be used like that [^1]
+  completions, and man pages matched by name, but does not guarantee complete removal
+  (see `relget uninstall --help` for details)
+- `relget` works on and installs utilities for **Linux only**; you may be able to make
+  it work on some other systems, but it was never intended to be used like that [^1]
 - `relget` downloads only `x86_64` binaries
 
 ## How to use it?
@@ -61,7 +61,36 @@ relget --prefix ~/.local --minimal-set
 relget --prefix ~/.local --apps rg,bat,fzf
 ```
 
-Services `relget` uses (`GitHub`, `Codeberg`, `GitLab`, ...) apply rate limiting to
+### Named app sets
+
+You can define reusable named lists of apps in `~/.config/relget.toml` under a `[sets]`
+table and select them with `--configured-set`:
+
+```toml
+github_token = "ghp_..."
+
+[sets]
+work = ["rg", "bat", "delta", "lazygit", "fzf", "fd-find"]
+home = ["rg", "bat", "delta", "lazygit", "fzf", "fd-find", "starship", "zoxide"]
+```
+
+```sh
+# install the "work" set
+relget --prefix ~/.local --configured-set work
+
+# reinstall it after an upgrade
+relget reinstall --prefix ~/.local --configured-set work
+
+# uninstall it
+relget uninstall --prefix ~/.local --configured-set work
+```
+
+`--configured-set`, `--apps`, and `--minimal-set` are mutually exclusive — only one may
+be given per invocation.
+
+### Personal access tokens
+
+Services that `relget` uses (`GitHub`, `Codeberg`, `GitLab`, ...) apply rate limiting to
 their APIs. To avoid hitting these rate limits you should provide `PAT` (Personal Access
 Token) for each of them. These tokens can be read
 
@@ -73,8 +102,7 @@ Token) for each of them. These tokens can be read
   gitlab_token = "glpat-..." # optional, only needed for GitLab apps
   ```
 
-- from environment variables `RELGET_GHB_TOKEN`, `RELGET_CDB_TOKEN`, and
-  `RELGET_GLB_TOKEN`:
+- from environment variables:
 
   ```sh
   export RELGET_GHB_TOKEN="ghp_..."
@@ -82,9 +110,9 @@ Token) for each of them. These tokens can be read
   export RELGET_GLB_TOKEN="..."
   ```
 
-  Note that values from env variables have higher precedence.
+  Note that values from env variables have higher precedence
 
-- or from `relget`'s interactive prompt
+- from `relget`'s interactive prompt
 
   ```sh
   # prompt for GitHub token
@@ -110,15 +138,14 @@ relget uninstall --prefix ~/.local --minimal-set
 relget reinstall --prefix ~/.local --apps rg --gh-token-source load
 ```
 
-`uninstall` is best-effort: it removes the primary binary, standard shell
-completions, and man pages whose names match `{exe}-{anything}.N[.gz]`. Apps
-that install additional binaries under different names (e.g. `uv` also installs
-`uvx`) will have only the primary binary removed. Run `relget uninstall --help`
-for the full list of caveats.
+`uninstall` is best-effort: it removes the primary binary, standard shell completions,
+and man pages whose names match `{exe}-{anything}.N[.gz]`. Apps that install additional
+binaries under different names (e.g. `uv` also installs `uvx`) will have only the
+primary binary removed. Run `relget uninstall --help` for the full list of caveats.
 
 ## Caching
 
-`relget` always uses `~/.cache/relget` for stuff downloaded from `GitHub` and `Codeberg`.
+`relget` always uses `~/.cache/relget/` for stuff if downloads.
 
 ## Supported apps
 

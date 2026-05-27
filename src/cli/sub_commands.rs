@@ -17,6 +17,7 @@ pub fn list_apps_ids_command() {
 }
 
 pub fn install_apps_command(cli: &Cli) -> Result<()> {
+    let selected = select_apps(&cli.apps, cli.minimal_set, cli.configured_set.as_deref())?;
     log::info!("Installing into: {:?}", cli.prefix);
     let (gh_token, cb_token, gl_token) = if cli.offline {
         (None, None, None)
@@ -27,7 +28,6 @@ pub fn install_apps_command(cli: &Cli) -> Result<()> {
             load_or_prompt_gitlab_token(&cli.gl_token_source)?,
         )
     };
-    let selected = select_apps(&cli.apps, cli.minimal_set)?;
     let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, gl_token, cli.offline)?;
     if !installed.is_empty() {
         println!("Installed files:");
@@ -40,8 +40,8 @@ pub fn install_apps_command(cli: &Cli) -> Result<()> {
 }
 
 pub fn uninstall_command(cli: &Cli) -> Result<()> {
-    let selected = select_apps(&cli.apps, cli.minimal_set)?;
-    let validated = select_apps(&selected, false)?;
+    let selected = select_apps(&cli.apps, cli.minimal_set, cli.configured_set.as_deref())?;
+    let validated = select_apps(&selected, false, None)?;
 
     let removed = uninstall_apps(&cli.prefix, &validated)?;
     if removed.is_empty() {
@@ -56,7 +56,7 @@ pub fn uninstall_command(cli: &Cli) -> Result<()> {
 }
 
 pub fn reinstall_apps_command(cli: &Cli) -> Result<()> {
-    let selected = select_apps(&cli.apps, cli.minimal_set)?;
+    let selected = select_apps(&cli.apps, cli.minimal_set, cli.configured_set.as_deref())?;
     let removed = uninstall_apps(&cli.prefix, &selected)?;
     if removed.is_empty() {
         println!("No files removed.");
